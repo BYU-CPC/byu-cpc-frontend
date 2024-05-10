@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React from "react";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
 
@@ -13,7 +13,7 @@ function UserBadge() {
         {!user ? (
           <a href="/sign-in">Sign in</a>
         ) : (
-          <a href="" onClick={() => firebase.auth().signOut()}>
+          <a href="/" onClick={() => firebase.auth().signOut()}>
             Sign out
           </a>
         )}
