@@ -1,25 +1,53 @@
-import logo from './logo.svg';
-import './App.css';
+import { useEffect, StrictMode } from "react";
+import {
+  createBrowserRouter,
+  redirect,
+  RouterProvider,
+} from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import "./index.css";
+import firebase from "firebase/compat/app";
+const config = {
+  apiKey: "AIzaSyAIGt00sW24vecwBlgXJNyVKFje3ma9HqM",
+  authDomain: "byu-cpc.firebaseapp.com",
+};
+firebase.initializeApp(config);
+export const BACKEND_URL = "https://byu-cpc-backend-tqxfeezgfa-uw.a.run.app";
+const queryClient = new QueryClient();
 
-function App() {
+const router = createBrowserRouter([
+  {
+    path: "/",
+    loader: () => {
+      return redirect("/challenge");
+    },
+  },
+  {
+    path: "/challenge",
+    lazy: () => import("./pages/Challenge"),
+  },
+  {
+    path: "/sign-in",
+    lazy: () => import("./pages/SignIn"),
+  },
+  {
+    path: "/hspc",
+    loader: () => {
+      window.location.replace("/hspc.html");
+      return null;
+    },
+  },
+]);
+
+export default function App() {
+  useEffect(() => {
+    document.title = "BYU CPC Challenge";
+  }, []);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <StrictMode>
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    </StrictMode>
   );
 }
-
-export default App;

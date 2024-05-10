@@ -1,0 +1,726 @@
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BYU HSPC 2024</title>
+    <style>
+      :root {
+        --bg: #222632;
+      }
+      a {
+        color: inherit;
+      }
+      @font-face {
+        font-family: "Open Sans";
+        src: url("open-sans.ttf");
+      }
+      body {
+        margin: 0;
+        overflow: hidden;
+      }
+      html {
+        background-color: var(--bg);
+        color: #fff;
+        font-family: "Open Sans", sans-seriff;
+        font-size: 18px;
+      }
+      .mono {
+        font-size: min(1.1vw, 10px);
+        font-family: monospace;
+      }
+      #background {
+        position: fixed;
+        text-wrap: nowrap;
+        top: 0;
+        overflow: hidden;
+        width: 100%;
+        height: 100vh;
+        color: #fffd;
+        display: flex;
+      }
+      #width-test {
+        position: absolute;
+        top: -1000px;
+      }
+      #content {
+        position: absolute;
+        top: 0;
+        width: 100%;
+        flex-direction: column;
+        min-height: 100%;
+        display: flex;
+        align-items: center;
+        overflow: auto;
+        font-weight: 100;
+      }
+      .title {
+        text-wrap: nowrap;
+        text-align: center;
+        padding: 20px 0;
+        width: 100%;
+        font-size: min(8vw, 50px);
+        text-wrap: wrap;
+        z-index: 1;
+      }
+      .subtitle {
+        font-size: 30px;
+        font-weight: 100;
+        margin-bottom: 10px;
+      }
+      .foreground {
+        margin-bottom: 80px;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+      }
+
+      .caption {
+        font-size: 12px;
+        opacity: 70%;
+      }
+
+      .mleft {
+        margin-left: 10px;
+      }
+
+      .fadein {
+        opacity: 0%;
+        transition: opacity 1s ease;
+      }
+
+      .card {
+        border: 1px solid white;
+        background-color: var(--bg);
+        width: min(80%, 900px);
+        display: flex;
+        flex-direction: column;
+        padding: 20px;
+        border-radius: 15px;
+        transition: all 0.1s ease;
+        line-height: 1.5;
+      }
+      .button:hover,
+      .card:hover {
+        box-shadow: 0 0 8px #fff9;
+      }
+      .bold {
+        font-weight: 500;
+      }
+      .glow,
+      .title,
+      a:hover {
+        text-shadow: 0 0 5px #fff9;
+      }
+      .italic {
+        font-style: italic;
+      }
+      li {
+        margin-bottom: 15px;
+      }
+      ul {
+        padding-left: 15px;
+      }
+      .registration-container {
+        width: min(85%, 900px);
+        display: flex;
+        justify-content: center;
+        gap: 50px;
+        flex-wrap: wrap;
+      }
+      .button {
+        text-decoration: none;
+        font-size: 30px;
+        padding: 10px 20px;
+        border: 1px solid white;
+        border-radius: 15px;
+        transition: all 0.1s ease;
+        background-color: var(--bg);
+      }
+      .table {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+      }
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+      }
+      .time {
+        width: 250px;
+      }
+      .event {
+        min-width: 200px;
+      }
+      img {
+        border-radius: 5px;
+      }
+    </style>
+  </head>
+  <body>
+    <span id="width-test" class="mono">AaLlEeWwGg0123456789</span>
+    <div id="background" class="mono"></div>
+    <div id="content">
+      <div class="title fadein">BYU Open High School Programming Contest</div>
+      <div style="margin-bottom: 65vh"></div>
+      <div class="foreground fadein">
+        <div class="registration-container">
+          <a
+            class="button"
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://docs.google.com/forms/d/e/1FAIpQLScVrjt5-xyXnJpVqqKyCls7ogunrXA7fMZkV5oywcds9PzfJQ/viewform"
+            >Student registration</a
+          >
+          <a
+            class="button"
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://docs.google.com/forms/d/e/1FAIpQLSdedTQ94ZC8bTA5etqm7uFMmudgBbyH1DRv15jmKrS8KvUPgQ/viewform"
+            >Teacher/Coach registration</a
+          >
+        </div>
+      </div>
+      <div class="foreground fadein">
+        <div class="card">
+          <div class="subtitle">Date and Location</div>
+          <div class="card-content">
+            <ul>
+              <li>
+                <span class="bold">Date and time:</span> Friday, May 17th, 2024.
+                9am – 2:30pm
+              </li>
+              <li>
+                <span class="bold">Location:</span>
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href="https://wsc.byu.edu/"
+                  >BYU Wilkinson Student Center</a
+                >
+                (WSC Terrace) &mdash;
+                <a
+                  href="https://maps.app.goo.gl/WMb9iHEpdnCGGy7n7"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  >Directions</a
+                >
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="foreground fadein">
+        <div class="card">
+          <img src="students.jpg" />
+          <div class="caption">
+            <a
+              href="https://www.flickr.com/photos/29648341@N08/4863699127"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Computing Sciences outreach program for high school students</a
+            >
+            by
+            <a
+              href="https://www.flickr.com/photos/29648341@N08/"
+              target="_blank"
+              rel="noopener noreferrer"
+              >Berkeley Lab</a
+            >
+            is marked with
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://creativecommons.org/licenses/by-nc-nd/2.0/?ref=openverse"
+              >CC BY-NC-ND 2.0</a
+            >
+          </div>
+        </div>
+      </div>
+      <div class="foreground fadein">
+        <div class="card">
+          <div class="subtitle mleft">Details</div>
+          <div class="card-content">
+            <ul>
+              <li>
+                <span class="bold">Prizes:</span>
+                Prizes will awarded on the following basis:
+                <ul>
+                  <li>1st – 5th Place Teams – Prizes/Gift Cards</li>
+                  <li>
+                    10+ additional prizes will be given to randomly selected
+                    participants
+                  </li>
+                </ul>
+              </li>
+              <li>
+                |
+                <span class="bold">Eligibility:</span>
+                Any high school student residing in the state of Utah may
+                participate.
+              </li>
+              <li>
+                <span class="bold">Registration:</span>
+                Registration must be completed by
+                <span class="glow">both</span> students
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href="https://docs.google.com/forms/d/e/1FAIpQLScVrjt5-xyXnJpVqqKyCls7ogunrXA7fMZkV5oywcds9PzfJQ/viewform"
+                  >(at this link)</a
+                >
+                and teachers/coaches
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href="https://docs.google.com/forms/d/e/1FAIpQLSdedTQ94ZC8bTA5etqm7uFMmudgBbyH1DRv15jmKrS8KvUPgQ/viewform"
+                  >(at this link).</a
+                >
+                <ul>
+                  <li class="glow italic">
+                    Participants must register by midnight on Saturday, April
+                    27th, 2024.
+                  </li>
+                </ul>
+              </li>
+              <li>
+                <span class="bold">Computer Systems:</span> Teams of up to 3
+                students will need to provide their own laptop (just 1) with
+                which they will access the contest platform via the internet.
+              </li>
+              <li>
+                <span class="bold">Contest Platform:</span> The contest will be
+                conducted on
+                <a
+                  target="_blank"
+                  rel="noopener roreferrer"
+                  href="https://www.hackerrank.com/"
+                  >HackerRank</a
+                >. The HackerRank website can be accessed by most common
+                operating systems (including Linux, MacOS and Windows) and
+                supports common languages (including but not limited to Java,
+                Python3 and C++).
+                <br />
+                <br />
+                Teams are encouraged to practice on the HackerRank platform
+                (create an account as a “Developer”) ahead of the contest so as
+                to be familiar with how it works. Specifically, we encourage
+                students to complete at least a few easy problems on the
+                <a
+                  target="_blank"
+                  rel="noopener roreferrer"
+                  href="https://www.hackerrank.com/domains/algorithms"
+                  >Algorithms</a
+                >
+                and/or
+                <a
+                  target="_blank"
+                  rel="noopener roreferrer"
+                  href="https://www.hackerrank.com/domains/data-structures"
+                  >Data Structures</a
+                >
+                parts of the HackerRank Problem Solving section, so that they
+                will be comfortable with the platform. Another really good
+                platform for additional problem solving practice is
+
+                <a
+                  target="_blank"
+                  rel="noopener roreferrer"
+                  href="https://open.kattis.com/"
+                  >Kattis</a
+                >
+
+                (this is the one that BYU’s competitive programming team
+                generally practices on).
+              </li>
+              <li>
+                <span class="bold">Spectators:</span> Family and friends are
+                invited to watch through the contest leaderboard. The
+                leaderboard will be published closer to the contest date.
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="foreground fadein">
+        <div class="card">
+          <div class="subtitle mleft">Schedule</div>
+
+          <div class="table">
+            <div class="row">
+              <div class="time">8:00 – 8:50 am</div>
+              <div class="event">Registration (WSC Terrace)</div>
+            </div>
+            <div class="row">
+              <div class="time">9:00 am – 9:20 am</div>
+              <div class="event">
+                Opening Ceremony / Welcome Meeting (WSC Terrace)
+              </div>
+            </div>
+            <div class="row">
+              <div class="time">9:25 – 9:50 am</div>
+              <div class="event">Setup/Testing (WSC Terrace)</div>
+            </div>
+            <div class="row">
+              <div class="time">10:00 am – 1:00 pm</div>
+              <div class="event">Actual Programming Contest (WSC Terrace)</div>
+            </div>
+            <div class="row">
+              <div class="time">1:00 – 1:45 pm</div>
+              <div class="event">Lunch</div>
+            </div>
+            <div class="row">
+              <div class="time">2:00 – 2:30 pm</div>
+              <div class="event">Results and Awards Ceremony (WSC Terrace)</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="foreground fadein">
+        <div class="card">
+          <div class="subtitle mleft">Questions?</div>
+          <div class="mleft">
+            Email
+            <a href="mailto:farrell@cs.byu.edu">Ryan Farrell</a>
+          </div>
+        </div>
+      </div>
+      <div class="foreground fadein">
+        <div class="card">
+          <div class="subtitle mleft">Sponsors / Acknowledgements</div>
+          <div class="mleft">
+            If you would like to sponser this event, please contact
+            <a href="mailto:farrell@cs.byu.edu">Ryan Farrell</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+
+<script>
+  let seed = 1;
+  function random() {
+    var x = (Math.PI / seed++) * 2000;
+    return x - Math.floor(x);
+  }
+  let el = document.getElementById("background");
+  const title = [
+    `1100111\\ 00\\     00\\ 00\\   11\\       00\\   00\\  110011\\  0000010\\   010001\\         000100\\   100111\\   110111\\  11\\   01\\`,
+    `01  __10\\\\10\\   01  |11 |  10 |      00 |  00 |00  __01\\ 11  __10\\ 10  __01\\       00  __00\\ 101 __01\\ 10  __11\\ 01 |  10 |`,
+    `11 |  01 |\\01\\ 01  / 01 |  00 |      01 |  10 |00 /  \\__|11 |  11 |01 /  \\__|      \\__/  11 |1011\\ 01 |\\__/  00 |01 |  00 |`,
+    `0011001\\ | \\0111  /  10 |  00 |      01100111 |\\000001\\  0101111  |01 |             011101  |00\\10\\10 | 001100  |10001010 |`,
+    `11  __01\\   \\11  /   10 |  01 |      10  __00 | \\____11\\ 11  ____/ 10 |            00  ____/ 01 \\0101 |10  ____/ \\_____00 |`,
+    `01 |  00 |   00 |    10 |  00 |      00 |  11 |10\\   01 |01 |      01 |  00\\       11 |      00 |\\010 |01 |            11 |`,
+    `0110111  |   11 |    \\010101  |      01 |  10 |\\000100  |00 |      \\110001  |      11010101\\ \\011000  /01011100\\       10 |`,
+    `\\_______/    \\__|     \\______/       \\__|  \\__| \\______/ \\__|       \\______/       \\________| \\______/ \\________|      \\__|`,
+  ];
+  const textSpan = document.getElementById("width-test");
+  let textWidth, textHeight, w, h, grid, a;
+  let intro = true;
+  const ground = [];
+
+  function wipe() {
+    for (let i = 0; i < h; i++) {
+      for (let j = 0; j < w; j++) {
+        grid[i][j] = " ";
+      }
+    }
+  }
+
+  async function fillGrid() {
+    textWidth = textSpan.offsetWidth / 20;
+    textHeight = textSpan.offsetHeight;
+    w = Math.ceil(window.innerWidth / textWidth);
+    h = Math.ceil(window.innerHeight / textHeight);
+    a = w * h;
+    grid = [];
+    ground[0] = new Array(w + 1);
+    ground[0].fill("_");
+    for (let i = 0; i < h; i++) {
+      grid[i] = [];
+    }
+    wipe();
+  }
+  function drawArray(x, y, progress, { arr }) {
+    seed = 1;
+    dx = 0;
+    dy = arr.length;
+    for (let i = 0; i < dy; i++) {
+      dx = Math.max(dx, arr[i].length);
+    }
+    rx = Math.ceil(dx / 2);
+    ry = Math.ceil(dy / 2);
+
+    for (let i = 0; i < dy; i++) {
+      const yy = i + y - ry;
+      if (yy < 0 || yy >= grid.length) continue;
+      for (let j = 0; j < arr[i].length; j++) {
+        if (arr[i][j] == " ") continue;
+        const xx = j + x - rx;
+        if (xx < 0 || xx >= grid[yy].length) continue;
+        const r = random();
+        if (r > progress) continue;
+        else if (r > progress / 2)
+          grid[yy][xx] = Math.floor(r * 100) % 2 ? "0" : "1";
+        else {
+          grid[yy][xx] = arr[i][j];
+        }
+      }
+    }
+  }
+  function drawFlames(x, y, size) {
+    const k = Math.floor(Math.random() * flames[size].length);
+    for (let i = 0; i < flames[size][k].length; i++) {
+      const yy = i + y;
+      for (let j = 0; j < flames[size][k][i].length; j++) {
+        if (flames[size][k][i][j] == " ") continue;
+        const xx = j + x;
+        grid[yy][xx] = flames[size][k][i][j];
+      }
+    }
+  }
+
+  let xoff = 0;
+  let yoff = 0;
+  let shake = 0;
+  let gy;
+  function drawRocket(x, y, progress) {
+    if (Math.random() < shake) {
+      xoff = (xoff + 1) % 2;
+    }
+    if (Math.random() < shake) {
+      yoff = (yoff + 1) % 2;
+    }
+    let cy = Math.floor((y * 12) / 11 + yoff);
+    if (progress < 10000) {
+      const goff = Math.floor((progress / 4000) ** 5);
+      if (goff > 2) {
+        shake = 0;
+        yoff = 0;
+        xoff = 0;
+        cy = Math.floor((y * 12) / 11 + yoff);
+      }
+      gy = Math.floor(cy + rocket.length / 2 + 1) + goff;
+      if (gy < h)
+        drawArray(x + xoff, gy, 2, {
+          arr: ground,
+        });
+    }
+    let sz = 2;
+    if (progress > 10000) sz = 0;
+    else if (progress < 1150 || progress > 9000) sz = 1;
+    else if (1300 < progress && progress < 7500) sz = 3;
+    if (dir) sz = Math.max(sz, 1);
+    if (progress > 1000 && (progress < 15000 || dir))
+      drawFlames(x + xoff - 10, Math.floor(cy + rocket.length / 2), sz);
+
+    drawArray(x + xoff, cy, 2, {
+      arr: rocket,
+    });
+  }
+  const starchars = ".`'*+o0";
+  const flames = [
+    [
+      [" ())            ()"],
+      [" (()           ()"],
+      [" ( )           ())"],
+      ["  ()           (()"],
+    ],
+    [
+      [" ( )           ( )", "   ()           ()"],
+      [" (()           ( )", "                ()"],
+      [" ( )           ())", "   ()             "],
+      ["  ())           (()", "  ()           ()"],
+    ],
+    [
+      [
+        " () )          (( )",
+        " ( ) )         ( ()",
+        "  ())           ()",
+        "  ()",
+      ],
+      [
+        "  ())           ( )",
+        "  ( )           () )",
+        " (()             ())",
+        "  ())            ()",
+        "  ()               ",
+      ],
+      [
+        " ( ))           ())",
+        " ((  )          (())",
+        " ( ))           ( )",
+        "  ()            ()",
+      ],
+      [
+        " ( ))          (( )",
+        " ((  )         (( ))",
+        "  ())           ())",
+        "   ()          ( ()",
+        "                ()",
+      ],
+      [
+        "( ()            ( ))",
+        " ())            ())",
+        " ()             (()",
+        "                 ()",
+      ],
+    ],
+    [
+      [
+        " (())           ())",
+        "  ( ))         (() )",
+        " ( )) )         ( ()",
+        "( () )         ( ( ))",
+        " (( )           (()  )",
+        "  ())            ( ))",
+        "  ()              ()",
+      ],
+      [
+        "  ( ))         (() )",
+        "  () )         ( ( ))",
+        " ( )) )         ( ())",
+        " (( )()        ((()  )",
+        " ( ))           ()) )",
+        "( ()             ( )",
+        " ( ()             ()",
+        "  ()",
+      ],
+      [
+        " (( ))         (() )",
+        " ( ) )         (( ))",
+        "( (( )          ( ( )",
+        " ( ))          ()  ))",
+        " ()) )          ()()",
+        "  ())           ( ()",
+        "   ()            ()",
+        "                  ()",
+      ],
+    ],
+  ];
+
+  const rocket = [
+    "         /\\",
+    "        ||||",
+    "       .|--|.",
+    "       ||==||",
+    "      .:||||:.",
+    "      |:|..|:|",
+    " /\\   |::--::|   /\\",
+    " ||   |::__::|   ||",
+    " || --.:/--\\:.-- ||",
+    " |::\\:||====||:/::|",
+    " |==|:||\\__/||:|==|",
+    "/|--|:||____||:|--|\\",
+    "||::|:||====||:|::||",
+    "||__|| \\\\__// ||__||",
+    "[[__]]        [[__]]",
+    " ####          ####",
+    " ####          ####",
+  ];
+  const stars = new Array(starchars.length);
+  for (let i = 0; i < stars.length; i++) stars[i] = Array();
+  function genStars(odds) {
+    if (Math.random() < (odds * a) / 10000) {
+      stars[Math.floor(Math.random() * stars.length)].push({
+        x: Math.floor(w * Math.random()),
+        y: 0,
+      });
+    }
+  }
+  function drawStars() {
+    for (let i = 0; i < stars.length; i++) {
+      for (let j = 0; j < stars[i].length; j++) {
+        const star = stars[i][j];
+        if (
+          star.y >= 0 &&
+          star.x >= 0 &&
+          star.y < grid.length &&
+          star.x < grid[star.y].length
+        )
+          grid[star.y][star.x] = starchars[i];
+      }
+    }
+  }
+  function moveStars() {
+    for (let i = 0; i < stars.length; i++) {
+      stars[i] = stars[i].filter((star) => {
+        star.y += frame % (stars.length - i) === 0;
+        return star.y < h;
+      });
+    }
+  }
+  let frame = 0;
+  let dir = 0;
+  let left = 0;
+  let right = 0;
+  let rp = 0;
+  window.addEventListener("keydown", function (event) {
+    const key = event.key; // "ArrowRight", "ArrowLeft", "ArrowUp", or "ArrowDown"
+    if (key == "ArrowRight") right = 1;
+    if (key == "ArrowLeft") left = 1;
+  });
+  window.addEventListener("keyup", function (event) {
+    const key = event.key; // "ArrowRight", "ArrowLeft", "ArrowUp", or "ArrowDown"
+    if (key == "ArrowRight") right = 0;
+    if (key == "ArrowLeft") left = 0;
+  });
+
+  const update = (timestamp) => {
+    const time = new Date();
+    fillGrid();
+    const mw = Math.floor(w / 2);
+    const mh = Math.floor(h / 2);
+    shake =
+      (timestamp < 1000 ? 0 : Math.max((8000 - timestamp) / 24000, 0)) ** 2.5 *
+      8;
+    if (timestamp > 8000) {
+      genStars(Math.min(0.8, ((timestamp - 8000) / 20000) ** 2));
+      drawStars();
+      moveStars();
+    }
+    if (timestamp > 8000) {
+      dir = 0;
+      if (left ^ right) {
+        dir = left ? -1 : 1;
+      }
+      rp += dir;
+      rp = Math.floor(Math.min(w / 2, Math.max(-w / 2, rp)));
+    }
+
+    drawRocket(mw + rp, mh - 3, timestamp);
+    if (timestamp > 4000) {
+      if (intro) {
+        intro = false;
+        const fg = document.querySelectorAll(".fadein");
+        mh;
+        fg.forEach((node) => {
+          node.style.opacity = "100%";
+        });
+        const body = document.querySelector("body");
+        body.style.overflow = "auto";
+        body.scrollTop = 0;
+      }
+    }
+    if (2000 < timestamp && timestamp < 20000) {
+      const y = Math.floor(mh / 2);
+      if (timestamp > 10000) {
+        drawArray(mw, y, (20000 - timestamp) / 800, {
+          arr: title,
+        });
+      } else
+        drawArray(mw, y, (timestamp - 2000) / 800, {
+          arr: title,
+        });
+    }
+    el.innerHTML = grid
+      .map((row) => row.join("").replaceAll(" ", "&ensp;"))
+      .join("<br/>");
+    requestAnimationFrame(update);
+    frame++;
+  };
+  requestAnimationFrame(update);
+  fillGrid();
+  console.log(
+    "Do not answer!\nDo not answer!!\nDo not answer!!!\n\nThis world has received your message.\nI am a pacifist of this world. It is the luck of your civilization that I am the first to receive your message. I am warning you:\n\nDo not answer!\nDo not answer!!\nDo not answer!!!\n\nThere are tens of millions of stars in your direction. As long as you do not answer, this world will not be able to ascertain the source of your transmission.\nBut if you do answer, the source will be located right away. Your planet will be invaded. Your world will be conquered!\n\nDo not answer!\nDo not answer!!\nDo not answer!!!\n",
+  );
+</script>

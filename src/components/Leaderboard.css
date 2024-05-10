@@ -1,0 +1,63 @@
+.Leaderboard {
+  gap: 20px;
+}
+.LeaderboardRow {
+  width: min(90%, 1200px);
+  border-radius: 5px;
+}
+
+.expBar {
+  background-color: var(--bg-color);
+  height: 2px;
+}
+
+.expBarFill {
+  background-color: #2196f3;
+  border-radius: 5px;
+  /* glow */
+  box-shadow: 0 0 10px #2196f399;
+}
+
+.relative {
+  position: relative;
+}
+
+.bgImage {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: 0;
+}
+
+.streak {
+  width: 36px;
+  height: 36px;
+  display: flex;
+}
+
+.z1 {
+  z-index: 1;
+}
+
+.flame {
+  transform: translate(1px, -3px);
+}
+.streakText {
+  font-size: 13px;
+}
+
+.section {
+  flex: 1;
+  display: flex;
+  padding: 20px 20px;
+}
+
+.section:first-child > span {
+  margin-right: auto;
+}
+
+.section:last-child > span {
+  margin-left: auto;
+}

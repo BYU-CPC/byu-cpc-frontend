@@ -1,0 +1,63 @@
+.sign-in {
+  font-size: 20px;
+  color: var(--fg-secondary);
+  border: transparent;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+.sign-in:hover {
+  color: var(--fg-color);
+}
+
+.selected {
+  color: var(--fg-color);
+}
+
+.auth {
+  width: min(90%, 400px);
+  padding: 20px;
+  border-radius: 10px;
+}
+
+.sign-in-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+input,
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid var(--fg-secondary);
+  background-color: var(--bg-tertiary);
+  color: var(--fg-color);
+  transition: all 5000000s ease-in-out 0s;
+  font-size: 14px;
+}
+
+.submit {
+  padding: 10px;
+  border-radius: 5px;
+  border: transparent;
+  background-color: var(--fg-color);
+  color: var(--bg-color);
+  cursor: pointer;
+}
+.submit:hover {
+  background-color: var(--fg-accent);
+}
+
+.submit:disabled {
+  background-color: var(--fg-secondary);
+  cursor: default;
+}
