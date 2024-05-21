@@ -80,10 +80,19 @@ code {
   align-items: center;
 }
 
+.justify-right {
+  justify-content: flex-end;
+}
+
 .flexVar {
   display: flex;
   flex-direction: var(--flex-dir);
   align-items: center;
+}
+
+.responsive-fg {
+  width: min(90%, 1200px);
+  border-radius: 5px;
 }
 
 .wrap {
@@ -130,6 +139,9 @@ code {
 }
 .medium {
   font-size: 0.9rem;
+}
+.large {
+  font-size: 1.2rem;
 }
 .bold {
   font-weight: 700;

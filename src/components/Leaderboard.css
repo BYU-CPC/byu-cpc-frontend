@@ -1,10 +1,6 @@
 .Leaderboard {
   gap: 20px;
 }
-.LeaderboardRow {
-  width: min(90%, 1200px);
-  border-radius: 5px;
-}
 
 .expBar {
   background-color: var(--bg-color);

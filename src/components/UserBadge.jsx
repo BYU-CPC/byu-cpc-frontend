@@ -8,7 +8,10 @@ function UserBadge() {
   console.log(firebase.auth().currentUser, isSignedIn);
 
   return (
-    <div className="user-badge f1">
+    <div className="user-badge f1 flexRow justify-right gap-12">
+      <div>
+        <a href="/challenge/rules">Rules</a>
+      </div>
       <div className="pr-20">
         {!user ? (
           <a href="/sign-in">Sign in</a>

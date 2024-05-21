@@ -14,7 +14,7 @@ async function getTableData() {
 
 function LeaderboardRow({ user, rank }) {
   return (
-    <div className="LeaderboardRow flexCol bg-secondary">
+    <div className=" responsive-fg flexCol bg-secondary">
       <div className="flexVar w-full wrap">
         <div className="section flexCol">
           <div className="flexRow">
@@ -62,7 +62,7 @@ function LeaderboardRow({ user, rank }) {
               className="flexRow   gap-12"
               data-tooltip-id={user.id + "-kattis"}
             >
-              <div>Kattis</div>
+              <div>Avg. Kattis Diff.</div>
               <div className="bold">
                 {Math.round(
                   (user.kattis_data.reduce((a, b) => a + b.difficulty, 0) /

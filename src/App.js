@@ -27,6 +27,10 @@ const router = createBrowserRouter([
     lazy: () => import("./pages/Challenge"),
   },
   {
+    path: "/challenge/rules",
+    lazy: () => import("./pages/Rules"),
+  },
+  {
     path: "/sign-in",
     lazy: () => import("./pages/SignIn"),
   },
