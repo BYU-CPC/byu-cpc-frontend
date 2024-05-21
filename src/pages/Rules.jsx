@@ -6,7 +6,7 @@ export function Component() {
         <p className="large bold">Contest</p>
         <p>
           The BYU Competitive Programming Challenge is open to anyone who wants
-          to join. The contest will run from May 21st to August 12th.
+          to join. The contest will run from May 21st to September 12th.
         </p>
         <p className="large bold">Prizes</p>
         <p>
