@@ -57,7 +57,7 @@ code {
     monospace;
 }
 
-.m-20 {
+.p-10 {
   padding: 10px;
 }
 
@@ -185,6 +185,36 @@ h2 {
   text-align: center;
 }
 
-.pr-20 {
+.px-20 {
   padding-right: 20px;
+  padding-left: 20px;
+}
+
+button {
+  border: 1px solid var(--fg-secondary);
+  background-color: var(--bg-tertiary);
+  color: var(--fg-accent);
+  padding: 10px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+button:disabled {
+  background-color: var(--bg-secondary-color);
+  cursor: default;
+}
+
+input,
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid var(--fg-secondary);
+  background-color: var(--bg-tertiary);
+  color: var(--fg-color);
+  transition: all 5000000s ease-in-out 0s;
+  font-size: 14px;
+}
+input:disabled {
+  background-color: var(--bg-secondary-color);
 }

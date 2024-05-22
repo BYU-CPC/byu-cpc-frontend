@@ -45,6 +45,10 @@ const router = createBrowserRouter([
     lazy: () => import("./pages/SignIn"),
   },
   {
+    path: "/profile",
+    lazy: () => import("./pages/Profile"),
+  },
+  {
     path: "/hspc",
     loader: () => {
       window.location.replace("/hspc.html");

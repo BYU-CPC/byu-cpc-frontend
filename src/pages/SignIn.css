@@ -32,19 +32,6 @@
   gap: 5px;
 }
 
-input,
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus {
-  padding: 10px;
-  border-radius: 5px;
-  border: 1px solid var(--fg-secondary);
-  background-color: var(--bg-tertiary);
-  color: var(--fg-color);
-  transition: all 5000000s ease-in-out 0s;
-  font-size: 14px;
-}
-
 .submit {
   padding: 10px;
   border-radius: 5px;

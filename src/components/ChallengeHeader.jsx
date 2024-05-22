@@ -7,10 +7,10 @@ const ChallengeHeader = ({ children }) => {
       <div className="shadow w-full flexRow space-between space-beneath bg-secondary flex-center">
         <div className="f1" />
         <a href="/challenge">
-          <h2 className="f1">
+          <h3 className="f1">
             <span className="hide">BYU CPC</span>{" "}
             <span className="normal">Summer Challenge 2024</span>
-          </h2>
+          </h3>
         </a>
         <UserBadge />
       </div>

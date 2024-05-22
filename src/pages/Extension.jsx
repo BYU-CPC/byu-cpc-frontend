@@ -2,7 +2,7 @@ import { ChallengeHeader } from "../components/ChallengeHeader";
 export function Component() {
   return (
     <ChallengeHeader>
-      <div className="responsive-fg bg-secondary m-20">
+      <div className="responsive-fg bg-secondary p-10">
         <p className="large bold">Chrome</p>
         <p>
           Install the extension for Chrome{" "}

@@ -127,7 +127,7 @@ function LeaderboardRow({ user, rank }) {
 
 export function Leaderboard() {
   const query = useQuery({
-    queryKey: ["todos"],
+    queryKey: ["table_data"],
     queryFn: getTableData,
     staleTime: 1000 * 30,
     refetchOnWindowFocus: true,
