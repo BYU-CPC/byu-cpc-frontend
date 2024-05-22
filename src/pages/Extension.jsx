@@ -27,7 +27,11 @@ export function Component() {
           , then make sure to enable the permissions for the add-on to work:
         </p>
         <div>
-          <img src="firefox-permissions.png" width="75%" />
+          <img
+            src="firefox-permissions.png"
+            width="75%"
+            alt="enable firefox kattis permission"
+          />
         </div>
         <p className="large bold">From source</p>
         <p>
@@ -40,7 +44,7 @@ export function Component() {
             here
           </a>
           . You can download the compiled extension{" "}
-          <a href="extension.zip">here</a>.
+          <a href="/extension.zip">here</a>.
         </p>
       </div>
     </ChallengeHeader>
