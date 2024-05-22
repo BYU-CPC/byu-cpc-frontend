@@ -4,7 +4,7 @@ import UserBadge from "./UserBadge";
 const ChallengeHeader = ({ children }) => {
   return (
     <div className="flexCol align-center">
-      <div className="shadow w-full flexRow space-between space-beneath bg-secondary flex-center m-20">
+      <div className="shadow w-full flexRow space-between space-beneath bg-secondary flex-center">
         <div className="f1" />
         <a href="/challenge">
           <h2 className="f1">
