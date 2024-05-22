@@ -67,7 +67,13 @@ export function Component() {
             />
             <button
               type="submit"
-              disabled={!kattisInput || kattisError || isPending}
+              disabled={
+                !kattisInput ||
+                kattisError ||
+                isPending ||
+                savedKattisInput ||
+                kattisInput === profile.kattis_username
+              }
             >
               Save
             </button>
