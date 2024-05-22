@@ -28,7 +28,7 @@ export function Component() {
         </p>
         <div>
           <img
-            src="firefox-permissions.png"
+            src="/firefox-permissions.png"
             width="75%"
             alt="enable firefox kattis permission"
           />
