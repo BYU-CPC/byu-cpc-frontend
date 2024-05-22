@@ -7,13 +7,17 @@ import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  setPersistence,
+  browserLocalPersistence,
 } from "firebase/auth";
 import { BACKEND_URL } from "../App";
 
 function LogIn() {
   const navigate = useNavigate();
+  const auth = getAuth();
+  setPersistence(auth, browserLocalPersistence);
   const logIn = (email, password) =>
-    signInWithEmailAndPassword(getAuth(), email, password)
+    signInWithEmailAndPassword(auth, email, password)
       .then(() => {
         navigate("/challenge");
       })

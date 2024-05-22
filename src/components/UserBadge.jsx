@@ -1,9 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import firebase from "firebase/compat/app";
 import "firebase/compat/auth";
+import { onAuthStateChanged } from "firebase/auth";
 
 function UserBadge() {
-  const user = firebase.auth().currentUser;
+  const [user, setUser] = useState(firebase.auth().currentUser);
+  onAuthStateChanged(firebase.auth(), (user) => {
+    setUser(user);
+  });
+
   const isSignedIn = !!firebase.auth().currentUser;
   console.log(firebase.auth().currentUser, isSignedIn);
 
