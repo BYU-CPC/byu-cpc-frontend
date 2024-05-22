@@ -62,7 +62,7 @@ export function Component() {
         <p>
           Currently, the leaderboard only supports Kattis. To earn points from
           Kattis, you need to <a href="/sign-in">sign in</a> to this website and
-          install <a href="/challenge-extension">this browser extension.</a>{" "}
+          install <a href="/challenge/extension">this browser extension.</a>{" "}
           After that, you should be ready to start solving problems!
         </p>
         <p>

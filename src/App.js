@@ -25,11 +25,11 @@ const router = createBrowserRouter([
   {
     path: "/extension",
     loader: () => {
-      return redirect("/challenge-extension");
+      return redirect("/challenge/extension");
     },
   },
   {
-    path: "/challenge-extension",
+    path: "/challenge/extension",
     lazy: () => import("./pages/Extension"),
   },
   {
