@@ -24,10 +24,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/extension",
-    loader: () => {
-      window.location.replace("/extension.zip");
-      return null;
-    },
+    lazy: () => import("./pages/Extension"),
   },
   {
     path: "/challenge",
