@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import React from "react";
+import useUser from "../hooks/UseUser";
 import "./Leaderboard.css";
 import { Tooltip } from "react-tooltip";
 import Flame from "../icons/Flame";
@@ -67,7 +68,7 @@ function LeaderboardRow({ user, rank }) {
                 {Math.round(
                   (user.kattis_data.reduce((a, b) => a + b.difficulty, 0) /
                     user.kattis_data.length) *
-                    10
+                    10,
                 ) / 10}
               </div>
             </div>
@@ -78,7 +79,7 @@ function LeaderboardRow({ user, rank }) {
               <div className="bold">
                 {Math.round(
                   user.cf_data.problems.reduce((a, b) => a + b.difficulty, 0) /
-                    user.cf_data.problems.length
+                    user.cf_data.problems.length,
                 )}
               </div>
             </div>
@@ -109,13 +110,13 @@ function LeaderboardRow({ user, rank }) {
               {Math.round(
                 (user.kattis_data.reduce((a, b) => a + b.difficulty, 0) /
                   user.kattis_data.length) *
-                  10
+                  10,
               ) / 10}
             </div>
             <div>
               Max difficulty:{" "}
               {Math.max(
-                ...user.kattis_data.map((problem) => problem.difficulty)
+                ...user.kattis_data.map((problem) => problem.difficulty),
               )}
             </div>
           </div>
@@ -132,6 +133,7 @@ export function Leaderboard() {
     staleTime: 1000 * 30,
     refetchOnWindowFocus: true,
   });
+  const user = useUser();
   const users = query?.data ?? [];
   if (query.isLoading) {
     return <div>Loading...</div>;
@@ -142,6 +144,7 @@ export function Leaderboard() {
   return (
     <div className="Leaderboard flexCol w-full align-center">
       {users
+        .filter((a) => !!a.score || a.id === user?.id)
         .sort((a, b) => b.score - a.score)
         .map((user, index) => (
           <LeaderboardRow key={user.id} user={user} rank={index + 1} />
