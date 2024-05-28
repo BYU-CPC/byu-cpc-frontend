@@ -27,19 +27,19 @@ function PlatformUsernameSelector({ platform }) {
     if (profile) {
       setUsernameInput(profile[platform + "_username"]);
     }
-  }, [profile]);
+  }, [profile, platform]);
   const [usernameInputDebounce] = useDebounce(usernameInput, 500);
   const [usernameError, setUsernameError] = useState(false);
   useEffect(() => {
     const validateUsername = async () => {
       setUsernameError(
-        !(await isPlatformUsernameValid(usernameInputDebounce, platform))
+        !(await isPlatformUsernameValid(usernameInputDebounce, platform)),
       );
     };
     validateUsername();
-  }, [usernameInputDebounce]);
+  }, [usernameInputDebounce, platform]);
   const { mutateAsync, isPending } = useMutation({
-    mutationFn: async (username) => {
+    mutationFn: async () => {
       await axios.post(`${BACKEND_URL}/set_${platform}_username`, {
         id_token: await user.getIdToken(),
         username: usernameInput,
@@ -50,7 +50,7 @@ function PlatformUsernameSelector({ platform }) {
   });
   const handleKattisSubmit = (event) => {
     event.preventDefault();
-    mutateAsync(usernameInput);
+    mutateAsync();
   };
   return (
     <>
