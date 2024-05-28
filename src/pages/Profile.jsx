@@ -7,80 +7,94 @@ import axios from "axios";
 import { BACKEND_URL } from "../App";
 import { useMutation } from "@tanstack/react-query";
 
-async function isKattisUsernameValid(username) {
+async function isPlatformUsernameValid(username, platform) {
   if (!username) {
     return true;
   }
-  const response = await axios.post(BACKEND_URL + "/kattis/validate", {
+  const response = await axios.post(`${BACKEND_URL}/${platform}/validate`, {
     username,
   });
   return response.data.valid;
 }
 
-export function Component() {
+function PlatformUsernameSelector({ platform }) {
   const profile = useUserProfile();
-  const [savedKattisInput, setSavedKattisInput] = useState(false);
   const user = useUser();
-  // make axios request to set kattis username
+  const platformDisplay = platform[0].toUpperCase() + platform.slice(1);
+  const [savedInput, setSavedInput] = useState(false);
+  const [usernameInput, setUsernameInput] = useState("");
+  useEffect(() => {
+    if (profile) {
+      setUsernameInput(profile[platform + "_username"]);
+    }
+  }, [profile]);
+  const [usernameInputDebounce] = useDebounce(usernameInput, 500);
+  const [usernameError, setUsernameError] = useState(false);
+  useEffect(() => {
+    const validateUsername = async () => {
+      setUsernameError(
+        !(await isPlatformUsernameValid(usernameInputDebounce, platform))
+      );
+    };
+    validateUsername();
+  }, [usernameInputDebounce]);
   const { mutateAsync, isPending } = useMutation({
-    mutationFn: async (kattis_username) => {
-      await axios.post(BACKEND_URL + "/set_kattis_username", {
+    mutationFn: async (username) => {
+      await axios.post(`${BACKEND_URL}/set_${platform}_username`, {
         id_token: await user.getIdToken(),
-        kattis_username: kattisInput,
+        username: usernameInput,
       });
-      setSavedKattisInput(true);
+      setSavedInput(true);
     },
     mutationKey: "set_kattis_username",
   });
   const handleKattisSubmit = (event) => {
     event.preventDefault();
-    mutateAsync(kattisInput);
+    mutateAsync(usernameInput);
   };
-  const [kattisInput, setKattisInput] = useState("");
-  useEffect(() => {
-    if (profile) {
-      setKattisInput(profile.kattis_username);
-    }
-  }, [profile]);
-  const [kattisInputDebounce] = useDebounce(kattisInput, 500);
-  const [kattisError, setKattisError] = useState(false);
-  useEffect(() => {
-    const checkKattis = async () => {
-      setKattisError(!(await isKattisUsernameValid(kattisInputDebounce)));
-    };
-    checkKattis();
-  }, [kattisInputDebounce]);
+  return (
+    <>
+      <p className="inputLabel">{platformDisplay} username</p>
+      <form onSubmit={handleKattisSubmit}>
+        <input
+          type="text"
+          value={usernameInput}
+          onChange={(e) => {
+            setUsernameInput(e.target.value);
+            setSavedInput(false);
+          }}
+        />
+        <button
+          type="submit"
+          disabled={
+            !usernameInput ||
+            usernameError ||
+            isPending ||
+            savedInput ||
+            usernameInput === profile[`${platform}_username`]
+          }
+        >
+          Save
+        </button>
+      </form>
+      {usernameError && usernameInputDebounce && (
+        <p>Invalid {platformDisplay} username</p>
+      )}
+      {isPending && <p>Saving...</p>}
+      {!isPending && savedInput && <p>Saved!</p>}
+    </>
+  );
+}
+
+export function Component() {
+  const profile = useUserProfile();
   return (
     <ChallengeHeader>
       {profile ? (
         <div className="responsive-fg flexCol bg-secondary p-10">
           <h3>{profile.display_name}</h3>
-          <p className="input-label">Kattis username</p>
-          <form onSubmit={handleKattisSubmit}>
-            <input
-              type="text"
-              value={kattisInput}
-              onChange={(e) => {
-                setKattisInput(e.target.value);
-                setSavedKattisInput(false);
-              }}
-            />
-            <button
-              type="submit"
-              disabled={
-                !kattisInput ||
-                kattisError ||
-                isPending ||
-                savedKattisInput ||
-                kattisInput === profile.kattis_username
-              }
-            >
-              Save
-            </button>
-          </form>
-          {kattisError && kattisInputDebounce && <p>Invalid Kattis username</p>}
-          {isPending && <p>Saving...</p>}
-          {!isPending && savedKattisInput && <p>Saved!</p>}
+          <PlatformUsernameSelector platform="kattis" />
+          <PlatformUsernameSelector platform="codeforces" />
         </div>
       ) : (
         "Loading..."
