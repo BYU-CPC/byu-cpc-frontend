@@ -58,28 +58,32 @@ function LeaderboardRow({ user, rank }) {
           </div>
         </div>
         <div className="flexRow  gap-12 section">
+          <div>Avg. Diff.</div>
           {!!user.kattis_data.length && (
             <div
               className="flexRow   gap-12"
               data-tooltip-id={user.id + "-kattis"}
             >
-              <div>Avg. Kattis Diff.</div>
+              <div>Kattis</div>
               <div className="bold">
                 {Math.round(
                   (user.kattis_data.reduce((a, b) => a + b.difficulty, 0) /
                     user.kattis_data.length) *
-                    10,
+                    10
                 ) / 10}
               </div>
             </div>
           )}
           {!!user.cf_data.problems.length && (
-            <div className="flexRow  gap-12">
+            <div
+              className="flexRow  gap-12"
+              data-tooltip-id={user.id + "-codeforces"}
+            >
               <div>Codeforces</div>
               <div className="bold">
                 {Math.round(
                   user.cf_data.problems.reduce((a, b) => a + b.difficulty, 0) /
-                    user.cf_data.problems.length,
+                    user.cf_data.problems.length
                 )}
               </div>
             </div>
@@ -110,13 +114,32 @@ function LeaderboardRow({ user, rank }) {
               {Math.round(
                 (user.kattis_data.reduce((a, b) => a + b.difficulty, 0) /
                   user.kattis_data.length) *
-                  10,
+                  10
               ) / 10}
             </div>
             <div>
               Max difficulty:{" "}
               {Math.max(
-                ...user.kattis_data.map((problem) => problem.difficulty),
+                ...user.kattis_data.map((problem) => problem.difficulty)
+              )}
+            </div>
+          </div>
+        </div>
+      </Tooltip>
+      <Tooltip id={user.id + "-codeforces"}>
+        <div>
+          <div>
+            <div>
+              Avg difficulty:{" "}
+              {Math.round(
+                user.cf_data.problems.reduce((a, b) => a + b.difficulty, 0) /
+                  user.cf_data.problems.length
+              )}
+            </div>
+            <div>
+              Max difficulty:{" "}
+              {Math.max(
+                ...user.cf_data.problems.map((problem) => problem.difficulty)
               )}
             </div>
           </div>
