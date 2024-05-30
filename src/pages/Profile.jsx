@@ -28,7 +28,7 @@ function PlatformUsernameSelector({ platform }) {
       setUsernameInput(profile[platform + "_username"]);
     }
   }, [profile, platform]);
-  const [usernameInputDebounce] = useDebounce(usernameInput, 500);
+  const [usernameInputDebounce] = useDebounce(usernameInput, 2000);
   const [usernameError, setUsernameError] = useState(false);
   useEffect(() => {
     const validateUsername = async () => {
