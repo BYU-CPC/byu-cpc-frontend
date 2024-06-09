@@ -45,9 +45,15 @@ function LeaderboardRow({ user, rank }) {
               )}
             </div>
           </div>
-          <div>
-            <span className="small">Lv.</span>{" "}
-            <span className="bold">{user.level}</span>
+          <div className="flexRow gap-12">
+            <div>
+              <span className="small">Lv.</span>{" "}
+              <span className="bold">{user.level}</span>
+            </div>
+            <div>
+              <span className="small">Score:</span>{" "}
+              <span className="">{user.score}</span>
+            </div>
           </div>
         </div>
         <div className="flexRow gap-12 wrap section">

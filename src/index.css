@@ -7,6 +7,7 @@
   --bg-secondary-color: var(--white);
   --bg-tertiary: var(--dimmer-white);
   --fg-color: #333;
+  --accent-color: #2196f3;
   --fg-accent: #555;
   --fg-secondary: #0004;
   --rt-transition-show-delay: 1s !important;
@@ -168,7 +169,7 @@ code {
 }
 
 a {
-  color: var(--fg-color);
+  color: var(--accent-color);
   text-decoration: none;
   font-weight: 700;
 }
@@ -217,4 +218,8 @@ input:-webkit-autofill:focus {
 }
 input:disabled {
   background-color: var(--bg-secondary-color);
+}
+
+.fg-color {
+  color: var(--fg-color);
 }

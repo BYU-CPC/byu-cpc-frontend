@@ -81,8 +81,12 @@ export function Component() {
           cheating will result in disqualification from the contest. Cheating
           includes the following:
           <ul>
-            <li>Submitting code that you did not write</li>
-            <li>Submitting code that you do not understand</li>
+            <li>Submitting entire solutions that you did not write</li>
+            <li>
+              Submitting entire solutions that you do not mostly understand
+              &mdash; Using another person's implementation of a general
+              algorithm that you use to help solve a problem is okay
+            </li>
             <li>Spoofing submissions</li>
             <li>
               Submitting code you had written previously on a separate account
@@ -91,6 +95,13 @@ export function Component() {
           </ul>
           Things that are not cheating include:
           <ul>
+            <li>
+              Using other peoples' implementations for general algorithms/data
+              structure &mdash;{" "}
+              <a href="https://www.youtube.com/watch?v=RDzsrmMl48I">
+                Using book code without understanding completely it is okay
+              </a>
+            </li>
             <li>
               Discussing problems with others to understand their solutions
             </li>
