@@ -12,10 +12,71 @@ import { BACKEND_URL } from "../App";
 async function getTableData() {
   return (await axios.get(`${BACKEND_URL}/get_table`)).data;
 }
+async function getThisWeek() {
+  return (await axios.get(`${BACKEND_URL}/get_this_week`)).data;
+}
 
-function LeaderboardRow({ user, rank }) {
+function WeeklyProblemBox({ solved, allProblemsLength }) {
+  return (
+    <div
+      className={`center rounded small ${
+        solved === 2 ? "bg-green" : solved === 1 ? "outline-green" : ""
+      }`}
+      style={{ width: `${100 / allProblemsLength}%` }}
+      data-tooltip-id={
+        solved === 2 ? "solved" : solved === 1 ? "previously-solved" : ""
+      }
+    >
+      {solved === 2 ? "✓" : solved === 1 ? "✓" : ""}
+    </div>
+  );
+}
+
+function LeaderboardRow({ user, rank, thisWeek, allProblemsLength }) {
+  const solvedKattis = new Set(Object.keys(user.kattis_submissions));
+  const solvedCodeforces = new Set(Object.keys(user.codeforces_submissions));
+  const validSolvedKattis = new Set(
+    user.kattis_data.map((problem) => problem.id)
+  );
+  const validSolvedCodeforces = new Set(
+    user.cf_data.problems.map((problem) => problem.id)
+  );
   return (
     <div className=" responsive-fg flexCol bg-secondary">
+      <div>
+        <div className="flexRow">
+          {!!thisWeek?.kattis &&
+            thisWeek.kattis.map((problemId) => (
+              <WeeklyProblemBox
+                key="problemId"
+                solved={
+                  validSolvedKattis.has(problemId)
+                    ? 2
+                    : solvedKattis.has(problemId)
+                    ? 1
+                    : 0
+                }
+                allProblemsLength={allProblemsLength}
+              />
+            ))}
+        </div>
+        <div className="flexRow">
+          {!!thisWeek?.codeforces &&
+            thisWeek.codeforces.map((problemId) => (
+              <WeeklyProblemBox
+                key="problemId"
+                solved={
+                  validSolvedCodeforces.has(problemId)
+                    ? 2
+                    : solvedCodeforces.has(problemId)
+                    ? 1
+                    : 0
+                }
+                allProblemsLength={allProblemsLength}
+              />
+            ))}
+        </div>
+      </div>
       <div className="flexVar w-full wrap">
         <div className="section flexCol">
           <div className="flexRow">
@@ -132,6 +193,12 @@ function LeaderboardRow({ user, rank }) {
           </div>
         </div>
       </Tooltip>
+      <Tooltip id="solved">
+        This problem was solved during the Summer Challenge
+      </Tooltip>
+      <Tooltip id="previously-solved">
+        This problem was solved before the Summer Challenge
+      </Tooltip>
       <Tooltip id={user.id + "-codeforces"}>
         <div>
           <div>
@@ -154,6 +221,14 @@ function LeaderboardRow({ user, rank }) {
     </div>
   );
 }
+function formatCodeforcesId(input) {
+  const match = input.match(/^(\d+)(\D.*)$/);
+  if (match) {
+    return `${match[1]}/${match[2]}`;
+  } else {
+    return input;
+  }
+}
 
 export function Leaderboard() {
   const query = useQuery({
@@ -162,21 +237,107 @@ export function Leaderboard() {
     staleTime: 1000 * 30,
     refetchOnWindowFocus: true,
   });
+  const weekQuery = useQuery({
+    queryKey: ["this_week"],
+    queryFn: getThisWeek,
+    staleTime: 1000 * 30,
+    refetchOnWindowFocus: true,
+  });
   const user = useUser();
   const users = query?.data ?? [];
+  const thisWeek = weekQuery?.data;
   if (query.isLoading) {
     return <div>Loading...</div>;
   }
   if (query.isError) {
     return <div>Error: {query.error.message}</div>;
   }
+  const allProblemsLength =
+    thisWeek?.kattis?.length ?? 0 + thisWeek?.codeforces?.length ?? 0;
+  const solvedProblems = { kattis: {}, codeforces: {} };
+  for (const user of users) {
+    for (const problem of Object.keys(user.kattis_submissions ?? {})) {
+      solvedProblems.kattis[problem] = 1;
+    }
+    for (const problem of Object.keys(user.codeforces_submissions ?? {})) {
+      solvedProblems.codeforces[problem] = 1;
+    }
+  }
+  for (const user of users) {
+    for (const problem of user.kattis_data) {
+      solvedProblems.kattis[problem.id] = 2;
+    }
+    for (const problem of user.cf_data.problems) {
+      solvedProblems.codeforces[problem.id] = 2;
+    }
+  }
+
   return (
     <div className="Leaderboard flexCol w-full align-center">
+      {!!thisWeek?.topic && (
+        <div className="responsive-fg bg-secondary flexCol">
+          <div className="align-center">
+            <h4 className="large">Weekly Topic: {thisWeek?.topic}</h4>
+          </div>
+          <div className="flexRow">
+            {!!thisWeek?.kattis &&
+              thisWeek.kattis.map((problemId) => (
+                <div
+                  className={`center rounded py-10 ellipsis ${
+                    solvedProblems.kattis[problemId] === 1
+                      ? "outline-green"
+                      : solvedProblems.kattis[problemId] === 2
+                      ? "bg-green"
+                      : ""
+                  }`}
+                  style={{ width: `${100 / allProblemsLength}%` }}
+                  key={problemId}
+                >
+                  <a
+                    href={`https://open.kattis.com/problems/${problemId}`}
+                    className="fg-color underline "
+                  >
+                    {problemId}
+                  </a>
+                </div>
+              ))}
+            {!!thisWeek?.codeforces &&
+              thisWeek.codeforces.map((problemId) => (
+                <div
+                  className={`center rounded py-10 ellipsis ${
+                    solvedProblems.codeforces[problemId] === 1
+                      ? "outline-green"
+                      : solvedProblems.codeforces[problemId] === 2
+                      ? "bg-green"
+                      : ""
+                  }`}
+                  style={{ width: `${100 / allProblemsLength}%` }}
+                  key={problemId}
+                >
+                  <a
+                    href={`https://codeforces.com/problemset/problem/${formatCodeforcesId(
+                      problemId
+                    )}`}
+                    className="fg-color underline "
+                  >
+                    {problemId}
+                  </a>
+                </div>
+              ))}
+          </div>
+        </div>
+      )}
       {users
         .filter((a) => !!a.score || a.id === user?.id)
         .sort((a, b) => b.score - a.score)
         .map((user, index) => (
-          <LeaderboardRow key={user.id} user={user} rank={index + 1} />
+          <LeaderboardRow
+            key={user.id}
+            user={user}
+            rank={index + 1}
+            thisWeek={thisWeek}
+            allProblemsLength={allProblemsLength}
+          />
         ))}
     </div>
   );

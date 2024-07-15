@@ -6,7 +6,7 @@ export function Component() {
         <p className="large bold">Contest</p>
         <p>
           The BYU Competitive Programming Challenge is open to anyone who wants
-          to join. The contest will run from May 21st to September 12th.
+          to join. The contest will run from May 21st to September 19th.
         </p>
         <p className="large bold">Prizes</p>
         <p>
@@ -48,6 +48,15 @@ export function Component() {
           Any problem you solve during a Codeforces contest will be worth double
           its original score. In addition, you will earn 100 points for
           participating in the contest.
+        </p>
+        <p className="bold">Weekly Practice</p>
+        <p>
+          Every week, we will release a set of 5-10 problems for you to solve.
+          Each problem is worth double the points it would normally be worth. If
+          you solve a problem from the practice set for the first time
+          throughout the Summer Challenge, you will receive double the points.
+          If you have solved a problem before the contest started, you are
+          unfortunately not eligible to earn points for that problem.
         </p>
         <p>
           You can earn a daily bonus of 10 points by solving any problem in a
