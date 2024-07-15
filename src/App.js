@@ -12,7 +12,7 @@ const config = {
   authDomain: "byu-cpc.firebaseapp.com",
 };
 firebase.initializeApp(config);
-export const BACKEND_URL = "http://localhost:5000";
+export const BACKEND_URL = "https://byu-cpc-backend-tqxfeezgfa-uw.a.run.app";
 const queryClient = new QueryClient();
 
 const router = createBrowserRouter([
