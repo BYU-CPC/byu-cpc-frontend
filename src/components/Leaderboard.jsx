@@ -24,14 +24,18 @@ function WeeklyProblemBox({ solved, allProblemsLength, problemId }) {
       }`}
       style={{ width: `${100 / allProblemsLength}%` }}
       data-tooltip-id={
-        "" + solved === 2 ? "solved" : solved === 1 ? "previously-solved" : ""
+        problemId + solved === 2
+          ? "-solved"
+          : solved === 1
+          ? "-previously-solved"
+          : ""
       }
     >
       {solved === 2 ? "✓" : solved === 1 ? "✓" : ""}
-      <Tooltip id="solved">
+      <Tooltip id={problemId + "-solved"}>
         {problemId} was solved during the Summer Challenge
       </Tooltip>
-      <Tooltip id="previously-solved">
+      <Tooltip id={problemId + "-previously-solved"}>
         {problemId} was solved before the Summer Challenge
       </Tooltip>
     </div>
