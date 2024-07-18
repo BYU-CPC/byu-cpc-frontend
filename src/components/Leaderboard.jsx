@@ -154,7 +154,7 @@ function LeaderboardRow({ user, rank, thisWeek, allProblemsLength }) {
           )}
         </div>
       </div>
-      <div className="expBar w-full">
+      <div className="expBar w-full" data-tooltip-id={user.id + "-exp"}>
         <div
           className="expBarFill h-full"
           style={{
