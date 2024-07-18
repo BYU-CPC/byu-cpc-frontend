@@ -16,28 +16,15 @@ async function getThisWeek() {
   return (await axios.get(`${BACKEND_URL}/get_this_week`)).data;
 }
 
-function WeeklyProblemBox({ solved, allProblemsLength, problemId }) {
+function WeeklyProblemBox({ solved, allProblemsLength }) {
   return (
     <div
       className={`center rounded small ${
         solved === 2 ? "bg-green" : solved === 1 ? "outline-green" : ""
       }`}
       style={{ width: `${100 / allProblemsLength}%` }}
-      data-tooltip-id={
-        problemId + solved === 2
-          ? "-solved"
-          : solved === 1
-          ? "-previously-solved"
-          : ""
-      }
     >
       {solved === 2 ? "✓" : solved === 1 ? "✓" : ""}
-      <Tooltip id={problemId + "-solved"}>
-        {problemId} was solved during the Summer Challenge
-      </Tooltip>
-      <Tooltip id={problemId + "-previously-solved"}>
-        {problemId} was solved before the Summer Challenge
-      </Tooltip>
     </div>
   );
 }
@@ -58,8 +45,7 @@ function LeaderboardRow({ user, rank, thisWeek, allProblemsLength }) {
           {!!thisWeek?.kattis &&
             thisWeek.kattis.map((problemId) => (
               <WeeklyProblemBox
-                key="problemId"
-                problemId={problemId}
+                key={problemId}
                 solved={
                   validSolvedKattis.has(problemId)
                     ? 2
@@ -75,8 +61,7 @@ function LeaderboardRow({ user, rank, thisWeek, allProblemsLength }) {
           {!!thisWeek?.codeforces &&
             thisWeek.codeforces.map((problemId) => (
               <WeeklyProblemBox
-                key="problemId"
-                problemId={problemId}
+                key={problemId}
                 solved={
                   validSolvedCodeforces.has(problemId)
                     ? 2
