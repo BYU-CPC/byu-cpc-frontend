@@ -173,6 +173,9 @@ function LeaderboardRow({ user, rank, thisWeek, allProblemsLength }) {
           <div>Best Streak: {user.max_streak}</div>
         </div>
       </Tooltip>
+      <Tooltip id={user.id + "-exp"}>
+        {user.cur_exp} / {user.cur_exp + user.next_level} XP
+      </Tooltip>
       <Tooltip id={user.id + "-kattis"}>
         <div>
           <div>
