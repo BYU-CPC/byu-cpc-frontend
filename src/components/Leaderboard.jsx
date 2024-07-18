@@ -16,7 +16,7 @@ async function getThisWeek() {
   return (await axios.get(`${BACKEND_URL}/get_this_week`)).data;
 }
 
-function WeeklyProblemBox({ solved, allProblemsLength }) {
+function WeeklyProblemBox({ solved, allProblemsLength, problemId }) {
   return (
     <div
       className={`center rounded small ${
@@ -24,10 +24,16 @@ function WeeklyProblemBox({ solved, allProblemsLength }) {
       }`}
       style={{ width: `${100 / allProblemsLength}%` }}
       data-tooltip-id={
-        solved === 2 ? "solved" : solved === 1 ? "previously-solved" : ""
+        "" + solved === 2 ? "solved" : solved === 1 ? "previously-solved" : ""
       }
     >
       {solved === 2 ? "✓" : solved === 1 ? "✓" : ""}
+      <Tooltip id="solved">
+        {problemId} was solved during the Summer Challenge
+      </Tooltip>
+      <Tooltip id="previously-solved">
+        {problemId} was solved before the Summer Challenge
+      </Tooltip>
     </div>
   );
 }
@@ -49,6 +55,7 @@ function LeaderboardRow({ user, rank, thisWeek, allProblemsLength }) {
             thisWeek.kattis.map((problemId) => (
               <WeeklyProblemBox
                 key="problemId"
+                problemId={problemId}
                 solved={
                   validSolvedKattis.has(problemId)
                     ? 2
@@ -65,6 +72,7 @@ function LeaderboardRow({ user, rank, thisWeek, allProblemsLength }) {
             thisWeek.codeforces.map((problemId) => (
               <WeeklyProblemBox
                 key="problemId"
+                problemId={problemId}
                 solved={
                   validSolvedCodeforces.has(problemId)
                     ? 2
@@ -195,12 +203,6 @@ function LeaderboardRow({ user, rank, thisWeek, allProblemsLength }) {
             </div>
           </div>
         </div>
-      </Tooltip>
-      <Tooltip id="solved">
-        This problem was solved during the Summer Challenge
-      </Tooltip>
-      <Tooltip id="previously-solved">
-        This problem was solved before the Summer Challenge
       </Tooltip>
       <Tooltip id={user.id + "-codeforces"}>
         <div>
