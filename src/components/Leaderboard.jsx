@@ -40,39 +40,35 @@ function LeaderboardRow({ user, rank, thisWeek, allProblemsLength }) {
   );
   return (
     <div className=" responsive-fg flexCol bg-secondary">
-      <div>
-        <div className="flexRow">
-          {!!thisWeek?.kattis &&
-            thisWeek.kattis.map((problemId) => (
-              <WeeklyProblemBox
-                key={problemId}
-                solved={
-                  validSolvedKattis.has(problemId)
-                    ? 2
-                    : solvedKattis.has(problemId)
-                    ? 1
-                    : 0
-                }
-                allProblemsLength={allProblemsLength}
-              />
-            ))}
-        </div>
-        <div className="flexRow">
-          {!!thisWeek?.codeforces &&
-            thisWeek.codeforces.map((problemId) => (
-              <WeeklyProblemBox
-                key={problemId}
-                solved={
-                  validSolvedCodeforces.has(problemId)
-                    ? 2
-                    : solvedCodeforces.has(problemId)
-                    ? 1
-                    : 0
-                }
-                allProblemsLength={allProblemsLength}
-              />
-            ))}
-        </div>
+      <div className="flexRow">
+        {!!thisWeek?.kattis &&
+          thisWeek.kattis.map((problemId) => (
+            <WeeklyProblemBox
+              key={problemId}
+              solved={
+                validSolvedKattis.has(problemId)
+                  ? 2
+                  : solvedKattis.has(problemId)
+                  ? 1
+                  : 0
+              }
+              allProblemsLength={allProblemsLength}
+            />
+          ))}
+        {!!thisWeek?.codeforces &&
+          thisWeek.codeforces.map((problemId) => (
+            <WeeklyProblemBox
+              key={problemId}
+              solved={
+                validSolvedCodeforces.has(problemId)
+                  ? 2
+                  : solvedCodeforces.has(problemId)
+                  ? 1
+                  : 0
+              }
+              allProblemsLength={allProblemsLength}
+            />
+          ))}
       </div>
       <div className="flexVar w-full wrap">
         <div className="section flexCol">
