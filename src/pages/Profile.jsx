@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ChallengeHeader } from "../components/ChallengeHeader";
-import { useUserProfile } from "../hooks/UseUser";
-import useUser from "../hooks/UseUser";
+import { useUserProfile } from "../hooks/UseProfile";
+import useUser from "../hooks/UseProfile";
 import { useDebounce } from "use-debounce";
 import axios from "axios";
 import { BACKEND_URL } from "../App";
@@ -33,7 +33,7 @@ function PlatformUsernameSelector({ platform }) {
   useEffect(() => {
     const validateUsername = async () => {
       setUsernameError(
-        !(await isPlatformUsernameValid(usernameInputDebounce, platform)),
+        !(await isPlatformUsernameValid(usernameInputDebounce, platform))
       );
     };
     validateUsername();

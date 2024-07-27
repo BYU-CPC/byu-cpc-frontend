@@ -1,42 +1,44 @@
-import { useState, useEffect } from "react";
-import firebase from "firebase/compat/app";
-import { BACKEND_URL } from "../App";
-import { onAuthStateChanged } from "firebase/auth";
-import "firebase/compat/auth";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-export default function useUser() {
-  const [user, setUser] = useState(firebase.auth().currentUser);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(firebase.auth(), (user) => {
-      setUser(user);
-    });
-
-    // Clean up the subscription when the component unmounts
-    return () => unsubscribe();
-  }, []);
-
-  return user;
-}
-
-export function useUserProfile() {
-  const user = useUser();
-  const getProfile = async () => {
-    return (
-      await axios
-        .post(`${BACKEND_URL}/get_profile`, {
-          id_token: await user.getIdToken(),
-        })
-        .catch((e) => ({ data: null }))
-    ).data;
-  };
+import { BACKEND_URL } from "../App";
+export const useUserIds = () => {
   const query = useQuery({
-    queryKey: ["profile", user?.uid],
-    queryFn: getProfile,
-    staleTime: 1000 * 30,
-    refetchOnWindowFocus: true,
-    enabled: !!user,
+    queryFn: async () => (await axios.get(`${BACKEND_URL}/get_user_ids`)).data,
+    queryKey: ["user_ids"],
   });
-  return query?.data;
+  return query;
+};
+
+const userByIdQueryFn = async (id) => {
+  const data = (await axios.post(`${BACKEND_URL}/get_user`, { id })).data;
+  const parsed = JSON.parse(data.cache);
+  return parsed;
+};
+
+async function getTableData() {
+  return (await axios.get(`${BACKEND_URL}/get_table`)).data;
 }
+
+export const useUserById = (id) => {
+  const query = useQuery({
+    queryFn: () => userByIdQueryFn(id),
+    queryKey: ["user", id],
+  });
+  return query;
+};
+
+export const useUsers = () => {
+  const queryClient = useQueryClient();
+  const query = useQuery({
+    queryFn: getTableData,
+    queryKey: ["usersTable"],
+  });
+  if (query.data) {
+    for (const row of query.data) {
+      queryClient.setQueryData(["user", row.id], row, {
+        updatedAt: Date.now(),
+      });
+    }
+  }
+  return query.data;
+};

@@ -122,8 +122,8 @@ code {
 }
 
 .vfull {
-  height: 100vh;
   width: 100vw;
+  margin-top: 50px;
 }
 
 .w-full {

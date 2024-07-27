@@ -1,5 +1,5 @@
 import firebase from "firebase/compat/app";
-import useUser from "../hooks/UseUser";
+import useUser from "../hooks/UseProfile";
 
 function UserBadge() {
   const user = useUser();

@@ -1,17 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import React from "react";
-import useUser from "../hooks/UseUser";
+import useUser from "../hooks/UseProfile";
 import "./Leaderboard.css";
 import { Tooltip } from "react-tooltip";
 import Flame from "../icons/Flame";
 import FlameBorder from "../icons/FlameBorder";
 import DeadFlame from "../icons/DeadFlame";
 import { BACKEND_URL } from "../App";
+import { useUsers } from "../hooks/UseUser";
 
-async function getTableData() {
-  return (await axios.get(`${BACKEND_URL}/get_table`)).data;
-}
 async function getThisWeek() {
   return (await axios.get(`${BACKEND_URL}/get_this_week`)).data;
 }
@@ -221,27 +219,14 @@ function formatCodeforcesId(input) {
 }
 
 export function Leaderboard() {
-  const query = useQuery({
-    queryKey: ["table_data"],
-    queryFn: getTableData,
-    staleTime: 1000 * 30,
-    refetchOnWindowFocus: true,
-  });
   const weekQuery = useQuery({
     queryKey: ["this_week"],
     queryFn: getThisWeek,
-    staleTime: 1000 * 30,
     refetchOnWindowFocus: true,
   });
   const user = useUser();
-  const users = query?.data ?? [];
+  const users = (useUsers() ?? []).filter((a) => !!a);
   const thisWeek = weekQuery?.data;
-  if (query.isLoading) {
-    return <div>Loading...</div>;
-  }
-  if (query.isError) {
-    return <div>Error: {query.error.message}</div>;
-  }
   const allProblemsLength =
     thisWeek?.kattis?.length ?? 0 + thisWeek?.codeforces?.length ?? 0;
   const solvedProblems = { kattis: {}, codeforces: {} };

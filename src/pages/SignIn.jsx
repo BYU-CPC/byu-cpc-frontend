@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { ChallengeHeader } from "../components/ChallengeHeader";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./SignIn.css";
@@ -155,25 +156,27 @@ function SignUp() {
 export function Component() {
   const [signIn, setSignIn] = useState(true);
   return (
-    <div className="flex-center vfull">
-      <div className="flex-col bg-secondary auth shadow">
-        <div className="flexRow flex-center">
-          <button
-            className={"sign-in " + (signIn ? "selected" : "")}
-            onClick={() => setSignIn(true)}
-          >
-            Log In
-          </button>
-          <button
-            className={"sign-in " + (!signIn ? "selected" : "")}
-            onClick={() => setSignIn(false)}
-          >
-            Sign Up
-          </button>
+    <ChallengeHeader>
+      <div className="flex-center vfull">
+        <div className="flex-col bg-secondary auth shadow">
+          <div className="flexRow flex-center">
+            <button
+              className={"sign-in " + (signIn ? "selected" : "")}
+              onClick={() => setSignIn(true)}
+            >
+              Log In
+            </button>
+            <button
+              className={"sign-in " + (!signIn ? "selected" : "")}
+              onClick={() => setSignIn(false)}
+            >
+              Sign Up
+            </button>
+          </div>
+          <div>{signIn ? <LogIn /> : <SignUp />}</div>
         </div>
-        <div>{signIn ? <LogIn /> : <SignUp />}</div>
       </div>
-    </div>
+    </ChallengeHeader>
   );
 }
 
