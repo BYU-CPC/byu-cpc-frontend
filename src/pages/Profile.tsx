@@ -1,3 +1,4 @@
+import React, { FormEvent } from "react";
 import { useEffect, useState } from "react";
 import { ChallengeHeader } from "../components/ChallengeHeader";
 import { useUserProfile } from "../hooks/UseProfile";
@@ -7,7 +8,7 @@ import axios from "axios";
 import { BACKEND_URL } from "../App";
 import { useMutation } from "@tanstack/react-query";
 
-async function isPlatformUsernameValid(username, platform) {
+async function isPlatformUsernameValid(username: string, platform: string) {
   if (!username) {
     return true;
   }
@@ -17,7 +18,7 @@ async function isPlatformUsernameValid(username, platform) {
   return response.data.valid;
 }
 
-function PlatformUsernameSelector({ platform }) {
+function PlatformUsernameSelector({ platform }: { platform: string }) {
   const profile = useUserProfile();
   const user = useUser();
   const platformDisplay = platform[0].toUpperCase() + platform.slice(1);
@@ -41,14 +42,14 @@ function PlatformUsernameSelector({ platform }) {
   const { mutateAsync, isPending } = useMutation({
     mutationFn: async () => {
       await axios.post(`${BACKEND_URL}/set_${platform}_username`, {
-        id_token: await user.getIdToken(),
+        id_token: await user?.getIdToken(),
         username: usernameInput,
       });
       setSavedInput(true);
     },
-    mutationKey: "set_kattis_username",
+    mutationKey: ["set_kattis_username"],
   });
-  const handleKattisSubmit = (event) => {
+  const handleKattisSubmit = (event: FormEvent) => {
     event.preventDefault();
     mutateAsync();
   };

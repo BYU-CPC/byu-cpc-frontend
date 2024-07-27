@@ -9,7 +9,7 @@ export const useUserIds = () => {
   return query;
 };
 
-const userByIdQueryFn = async (id) => {
+const userByIdQueryFn = async (id: string) => {
   const data = (await axios.post(`${BACKEND_URL}/get_user`, { id })).data;
   const parsed = JSON.parse(data.cache);
   return parsed;
@@ -19,7 +19,7 @@ async function getTableData() {
   return (await axios.get(`${BACKEND_URL}/get_table`)).data;
 }
 
-export const useUserById = (id) => {
+export const useUserById = (id: string) => {
   const query = useQuery({
     queryFn: () => userByIdQueryFn(id),
     queryKey: ["user", id],

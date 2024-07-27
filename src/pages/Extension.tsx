@@ -1,3 +1,4 @@
+import React from "react";
 import { ChallengeHeader } from "../components/ChallengeHeader";
 export function Component() {
   return (
