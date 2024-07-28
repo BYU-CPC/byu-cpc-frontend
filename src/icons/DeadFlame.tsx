@@ -9,7 +9,7 @@ export default function DeadFlame(props: React.SVGProps<SVGSVGElement>) {
           fill: "none",
           stroke: "#88888899",
           strokeOpacity: 1,
-          strokeDasharray: "[2, 4]",
+          strokeDasharray: "2 4",
           strokeDashoffset: 0,
           strokeLinecap: "round",
           strokeLinejoin: "round",
