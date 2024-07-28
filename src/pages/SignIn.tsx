@@ -1,3 +1,4 @@
+import React, { FormEvent } from "react";
 import { useState } from "react";
 import { ChallengeHeader } from "../components/ChallengeHeader";
 import { useNavigate } from "react-router-dom";
@@ -17,7 +18,7 @@ function LogIn() {
   const navigate = useNavigate();
   const auth = getAuth();
   setPersistence(auth, browserLocalPersistence);
-  const logIn = (email, password) =>
+  const logIn = (email: string, password: string) =>
     signInWithEmailAndPassword(auth, email, password)
       .then(() => {
         navigate("/challenge");
@@ -28,7 +29,7 @@ function LogIn() {
   const [error, setError] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
     logIn(email, password);
   };
@@ -63,11 +64,11 @@ function LogIn() {
 function SignUp() {
   const navigate = useNavigate();
   const signUp = (
-    email,
-    password,
-    displayName,
-    kattisUsername,
-    codeforcesUsername
+    email: string,
+    password: string,
+    displayName: string,
+    kattisUsername: string,
+    codeforcesUsername: string
   ) =>
     createUserWithEmailAndPassword(getAuth(), email, password)
       .then(async (userCredential) => {
@@ -89,7 +90,7 @@ function SignUp() {
   const [kattisUsername, setKattisUsername] = useState("");
   const [codeforcesUsername, setCodeforcesUsername] = useState("");
   const [error, setError] = useState("");
-  const handleSubmit = (event) => {
+  const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
     signUp(email, password, displayName, kattisUsername, codeforcesUsername);
   };

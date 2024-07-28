@@ -9,8 +9,12 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "./index.css";
 import firebase from "firebase/compat/app";
 import { del, get, set } from "idb-keyval";
-import { experimental_createPersister } from "@tanstack/react-query-persist-client";
-function createIdbStorage() {
+import {
+  experimental_createPersister,
+  type AsyncStorage,
+  type PersistedQuery,
+} from "@tanstack/react-query-persist-client";
+function createIdbStorage(): AsyncStorage<PersistedQuery> {
   return {
     getItem: async (key) => await get(key),
     setItem: async (key, value) => await set(key, value),

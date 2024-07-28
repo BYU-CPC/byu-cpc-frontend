@@ -1,4 +1,5 @@
-export default function Flame(props) {
+import React from "react";
+export default function Flame(props: React.SVGProps<SVGSVGElement>) {
   return (
     <svg x="0px" y="0px" viewBox="0 0 32 32" {...props}>
       <linearGradient id="flame" gradientTransform="rotate(90)">

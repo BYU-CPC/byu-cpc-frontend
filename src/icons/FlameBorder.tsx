@@ -13,7 +13,7 @@ export default function FlameBorder(props: React.SVGProps<SVGSVGElement>) {
           fill: "none",
           stroke: "url(#flame)",
           strokeOpacity: 1,
-          strokeDasharray: [2, 4],
+          strokeDasharray: "[2, 4]",
           strokeDashoffset: 0,
           strokeLinecap: "round",
           strokeLinejoin: "round",

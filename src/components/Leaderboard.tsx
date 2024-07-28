@@ -14,7 +14,13 @@ async function getThisWeek() {
   return (await axios.get(`${BACKEND_URL}/get_this_week`)).data;
 }
 
-function WeeklyProblemBox({ solved, allProblemsLength }) {
+function WeeklyProblemBox({
+  solved,
+  allProblemsLength,
+}: {
+  solved: any;
+  allProblemsLength: any;
+}) {
   return (
     <div
       className={`center rounded small ${
@@ -27,20 +33,20 @@ function WeeklyProblemBox({ solved, allProblemsLength }) {
   );
 }
 
-function LeaderboardRow({ user, rank, thisWeek, allProblemsLength }) {
+function LeaderboardRow({ user, rank, thisWeek, allProblemsLength }: any) {
   const solvedKattis = new Set(Object.keys(user.kattis_submissions));
   const solvedCodeforces = new Set(Object.keys(user.codeforces_submissions));
   const validSolvedKattis = new Set(
-    user.kattis_data.map((problem) => problem.id)
+    user.kattis_data.map((problem: any) => problem.id)
   );
   const validSolvedCodeforces = new Set(
-    user.cf_data.problems.map((problem) => problem.id)
+    user.cf_data.problems.map((problem: any) => problem.id)
   );
   return (
     <div className=" responsive-fg flexCol bg-secondary">
       <div className="flexRow">
         {!!thisWeek?.kattis &&
-          thisWeek.kattis.map((problemId) => (
+          thisWeek.kattis.map((problemId: string) => (
             <WeeklyProblemBox
               key={problemId}
               solved={
@@ -54,7 +60,7 @@ function LeaderboardRow({ user, rank, thisWeek, allProblemsLength }) {
             />
           ))}
         {!!thisWeek?.codeforces &&
-          thisWeek.codeforces.map((problemId) => (
+          thisWeek.codeforces.map((problemId: string) => (
             <WeeklyProblemBox
               key={problemId}
               solved={
@@ -125,7 +131,10 @@ function LeaderboardRow({ user, rank, thisWeek, allProblemsLength }) {
               <div>Kattis</div>
               <div className="bold">
                 {Math.round(
-                  (user.kattis_data.reduce((a, b) => a + b.difficulty, 0) /
+                  (user.kattis_data.reduce(
+                    (a: any, b: any) => a + b.difficulty,
+                    0
+                  ) /
                     user.kattis_data.length) *
                     10
                 ) / 10}
@@ -140,8 +149,10 @@ function LeaderboardRow({ user, rank, thisWeek, allProblemsLength }) {
               <div>Codeforces</div>
               <div className="bold">
                 {Math.round(
-                  user.cf_data.problems.reduce((a, b) => a + b.difficulty, 0) /
-                    user.cf_data.problems.length
+                  user.cf_data.problems.reduce(
+                    (a: any, b: any) => a + b.difficulty,
+                    0
+                  ) / user.cf_data.problems.length
                 )}
               </div>
             </div>
@@ -173,7 +184,10 @@ function LeaderboardRow({ user, rank, thisWeek, allProblemsLength }) {
             <div>
               Avg difficulty:{" "}
               {Math.round(
-                (user.kattis_data.reduce((a, b) => a + b.difficulty, 0) /
+                (user.kattis_data.reduce(
+                  (a: any, b: any) => a + b.difficulty,
+                  0
+                ) /
                   user.kattis_data.length) *
                   10
               ) / 10}
@@ -181,7 +195,7 @@ function LeaderboardRow({ user, rank, thisWeek, allProblemsLength }) {
             <div>
               Max difficulty:{" "}
               {Math.max(
-                ...user.kattis_data.map((problem) => problem.difficulty)
+                ...user.kattis_data.map((problem: any) => problem.difficulty)
               )}
             </div>
           </div>
@@ -193,14 +207,18 @@ function LeaderboardRow({ user, rank, thisWeek, allProblemsLength }) {
             <div>
               Avg difficulty:{" "}
               {Math.round(
-                user.cf_data.problems.reduce((a, b) => a + b.difficulty, 0) /
-                  user.cf_data.problems.length
+                user.cf_data.problems.reduce(
+                  (a: any, b: any) => a + b.difficulty,
+                  0
+                ) / user.cf_data.problems.length
               )}
             </div>
             <div>
               Max difficulty:{" "}
               {Math.max(
-                ...user.cf_data.problems.map((problem) => problem.difficulty)
+                ...user.cf_data.problems.map(
+                  (problem: any) => problem.difficulty
+                )
               )}
             </div>
           </div>
@@ -209,7 +227,7 @@ function LeaderboardRow({ user, rank, thisWeek, allProblemsLength }) {
     </div>
   );
 }
-function formatCodeforcesId(input) {
+function formatCodeforcesId(input: any) {
   const match = input.match(/^(\d+)(\D.*)$/);
   if (match) {
     return `${match[1]}/${match[2]}`;
@@ -225,11 +243,11 @@ export function Leaderboard() {
     refetchOnWindowFocus: true,
   });
   const user = useUser();
-  const users = (useUsers() ?? []).filter((a) => !!a);
+  const users = (useUsers() ?? []).filter((a: any) => !!a);
   const thisWeek = weekQuery?.data;
   const allProblemsLength =
     thisWeek?.kattis?.length ?? 0 + thisWeek?.codeforces?.length ?? 0;
-  const solvedProblems = { kattis: {}, codeforces: {} };
+  const solvedProblems: any = { kattis: {}, codeforces: {} };
   for (const user of users) {
     for (const problem of Object.keys(user.kattis_submissions ?? {})) {
       solvedProblems.kattis[problem] = 1;
@@ -246,7 +264,6 @@ export function Leaderboard() {
       solvedProblems.codeforces[problem.id] = 2;
     }
   }
-
   return (
     <div className="Leaderboard flexCol w-full align-center">
       {!!thisWeek?.topic && (
@@ -256,7 +273,7 @@ export function Leaderboard() {
           </div>
           <div className="flexRow">
             {!!thisWeek?.kattis &&
-              thisWeek.kattis.map((problemId) => (
+              thisWeek.kattis.map((problemId: string) => (
                 <div
                   className={`center rounded py-10 ellipsis ${
                     solvedProblems.kattis[problemId] === 1
@@ -277,7 +294,7 @@ export function Leaderboard() {
                 </div>
               ))}
             {!!thisWeek?.codeforces &&
-              thisWeek.codeforces.map((problemId) => (
+              thisWeek.codeforces.map((problemId: string) => (
                 <div
                   className={`center rounded py-10 ellipsis ${
                     solvedProblems.codeforces[problemId] === 1
@@ -303,9 +320,9 @@ export function Leaderboard() {
         </div>
       )}
       {users
-        .filter((a) => !!a.score || a.id === user?.id)
-        .sort((a, b) => b.score - a.score)
-        .map((user, index) => (
+        .filter((a: any) => !!a.score || a.id === user?.uid)
+        .sort((a: any, b: any) => b.score - a.score)
+        .map((user: any, index: number) => (
           <LeaderboardRow
             key={user.id}
             user={user}
