@@ -70,6 +70,9 @@ code {
   padding-top: 10px;
   padding-bottom: 10px;
 }
+.mb-12 {
+  margin-bottom: 12px;
+}
 
 .flexCol {
   display: flex;

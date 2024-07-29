@@ -42,16 +42,25 @@ export function Leaderboard() {
       solvedProblems.codeforces.set(problem.id, 2);
     }
   }
+  const links = thisWeek.links ?? {};
   return (
     <div className="Leaderboard flexCol w-full align-center">
-      {!!thisWeek?.topic && (
+      {thisWeek.topic && (
         <div className="responsive-fg bg-secondary flexCol">
           <div className="align-center">
             <h4 className="large text-green-400">
               Weekly Topic: {thisWeek?.topic}
             </h4>
           </div>
-          <div>{}</div>
+          <div className="align-center flexCol">
+            <div className="flexRow align-center gap-12 mb-12">
+              {Object.keys(links)
+                .sort()
+                .map((key) => (
+                  <a href={links[key]}>{key}</a>
+                ))}
+            </div>
+          </div>
           <div className="flexRow">
             {!!thisWeek?.kattis &&
               thisWeek.kattis.map((problemId: string) => (
