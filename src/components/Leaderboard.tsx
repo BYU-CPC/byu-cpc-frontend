@@ -51,6 +51,7 @@ export function Leaderboard() {
               Weekly Topic: {thisWeek?.topic}
             </h4>
           </div>
+          <div>{}</div>
           <div className="flexRow">
             {!!thisWeek?.kattis &&
               thisWeek.kattis.map((problemId: string) => (
