@@ -1,8 +1,8 @@
 import React from "react";
-import { ChallengeHeader } from "../components/ChallengeHeader";
+import { Sidebar } from "../components/Sidebar";
 export function Component() {
   return (
-    <ChallengeHeader>
+    <Sidebar>
       <div className="responsive-fg bg-secondary p-10">
         <p className="large bold">Contest</p>
         <p>
@@ -133,7 +133,7 @@ export function Component() {
           (joshbtay@gmail.com)
         </p>
       </div>
-    </ChallengeHeader>
+    </Sidebar>
   );
 }
 

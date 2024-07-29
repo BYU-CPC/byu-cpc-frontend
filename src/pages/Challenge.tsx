@@ -1,11 +1,11 @@
 import React from "react";
 import { Leaderboard } from "../components/Leaderboard";
-import { ChallengeHeader } from "../components/ChallengeHeader";
+import { Sidebar } from "../components/Sidebar";
 export function Component() {
   return (
-    <ChallengeHeader>
+    <Sidebar>
       <Leaderboard />
-    </ChallengeHeader>
+    </Sidebar>
   );
 }
 

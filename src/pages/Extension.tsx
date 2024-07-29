@@ -1,8 +1,8 @@
 import React from "react";
-import { ChallengeHeader } from "../components/ChallengeHeader";
+import { Sidebar } from "../components/Sidebar";
 export function Component() {
   return (
-    <ChallengeHeader>
+    <Sidebar>
       <div className="responsive-fg bg-secondary p-10">
         <p className="large bold">Chrome</p>
         <p>
@@ -48,7 +48,7 @@ export function Component() {
           <a href="/extension.zip">here</a>.
         </p>
       </div>
-    </ChallengeHeader>
+    </Sidebar>
   );
 }
 

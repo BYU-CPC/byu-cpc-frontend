@@ -33,7 +33,7 @@ const queryClient = new QueryClient({
       gcTime: 1000 * 60 * 60 * 24 * 7, // 1 week
       staleTime: 1000 * 60,
       persister: experimental_createPersister({
-        buster: "1.0.0",
+        buster: "1.0.1",
         storage: createIdbStorage(),
         maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
         serialize: (persistedQuery) => persistedQuery,

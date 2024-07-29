@@ -15,6 +15,7 @@
   --rt-transition-show-delay: 1s !important;
   --rt-transition-closing-delay: 1s !important;
   --flex-dir: row;
+  --shrink-tiny: 0.9em;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -33,6 +34,7 @@
 @media (max-width: 600px) {
   :root {
     --flex-dir: column;
+    --shrink-tiny: 0.7em;
   }
   .hide {
     display: none;
@@ -157,6 +159,10 @@ code {
 }
 .bold {
   font-weight: 700;
+}
+
+.shrink-tiny {
+  font-size: var(--shrink-tiny);
 }
 
 .gap-12 {

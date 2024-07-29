@@ -1,7 +1,7 @@
 import React from "react";
 import UserBadge from "./UserBadge";
 
-const ChallengeHeader = ({ children }: React.PropsWithChildren) => {
+const Sidebar = ({ children }: React.PropsWithChildren) => {
   return (
     <div className="flexCol align-center">
       <div className="shadow w-full flexRow space-between space-beneath bg-secondary flex-center">
@@ -19,4 +19,4 @@ const ChallengeHeader = ({ children }: React.PropsWithChildren) => {
   );
 };
 
-export { ChallengeHeader };
+export { Sidebar };

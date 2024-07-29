@@ -1,6 +1,6 @@
 import React, { FormEvent } from "react";
 import { useEffect, useState } from "react";
-import { ChallengeHeader } from "../components/ChallengeHeader";
+import { Sidebar } from "../components/Sidebar";
 import { useUserProfile } from "../hooks/UseProfile";
 import useUser from "../hooks/UseProfile";
 import { useDebounce } from "use-debounce";
@@ -90,7 +90,7 @@ function PlatformUsernameSelector({ platform }: { platform: string }) {
 export function Component() {
   const profile = useUserProfile();
   return (
-    <ChallengeHeader>
+    <Sidebar>
       {profile ? (
         <div className="responsive-fg flexCol bg-secondary p-10">
           <h3>{profile.display_name}</h3>
@@ -100,7 +100,7 @@ export function Component() {
       ) : (
         "Loading..."
       )}
-    </ChallengeHeader>
+    </Sidebar>
   );
 }
 

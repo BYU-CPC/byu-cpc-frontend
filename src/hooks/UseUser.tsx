@@ -1,37 +1,40 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { BACKEND_URL } from "../App";
-export const useUserIds = () => {
-  const query = useQuery({
-    queryFn: async () => (await axios.get(`${BACKEND_URL}/get_user_ids`)).data,
-    queryKey: ["user_ids"],
-  });
-  return query;
+import {
+  CodeforcesContest,
+  CodeforcesProblem,
+  KattisProblem,
+} from "../types/platform";
+export type User = {
+  kattis_username: string;
+  codeforces_username: string;
+  display_name: string;
+  id: string;
+  kattis_data: KattisProblem[];
+  kattis_submissions: { [key: string]: number };
+  cf_data: { problems: CodeforcesProblem[]; contests: CodeforcesContest[] };
+  codeforces_submissions: { [key: string]: { type: string; time: number } };
+  cur_streak: number;
+  max_streak: number;
+  days: number[];
+  exp: { [key: number]: number };
+  score: number;
+  is_active: boolean;
+  level: number;
+  next_level: number;
+  cur_exp: number;
 };
 
-const userByIdQueryFn = async (id: string) => {
-  const data = (await axios.post(`${BACKEND_URL}/get_user`, { id })).data;
-  const parsed = JSON.parse(data.cache);
-  return parsed;
-};
-
-async function getTableData() {
+async function getUsers(): Promise<User[]> {
   return (await axios.get(`${BACKEND_URL}/get_table`)).data;
 }
-
-export const useUserById = (id: string) => {
-  const query = useQuery({
-    queryFn: () => userByIdQueryFn(id),
-    queryKey: ["user", id],
-  });
-  return query;
-};
 
 export const useUsers = () => {
   const queryClient = useQueryClient();
   const query = useQuery({
-    queryFn: getTableData,
-    queryKey: ["usersTable"],
+    queryFn: getUsers,
+    queryKey: ["users"],
   });
   if (query.data) {
     for (const row of query.data) {
@@ -40,5 +43,5 @@ export const useUsers = () => {
       });
     }
   }
-  return query.data;
+  return query.data ?? [];
 };

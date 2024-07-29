@@ -1,6 +1,6 @@
 import React, { FormEvent } from "react";
 import { useState } from "react";
-import { ChallengeHeader } from "../components/ChallengeHeader";
+import { Sidebar } from "../components/Sidebar";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./SignIn.css";
@@ -157,7 +157,7 @@ function SignUp() {
 export function Component() {
   const [signIn, setSignIn] = useState(true);
   return (
-    <ChallengeHeader>
+    <Sidebar>
       <div className="flex-center vfull">
         <div className="flex-col bg-secondary auth shadow">
           <div className="flexRow flex-center">
@@ -177,7 +177,7 @@ export function Component() {
           <div>{signIn ? <LogIn /> : <SignUp />}</div>
         </div>
       </div>
-    </ChallengeHeader>
+    </Sidebar>
   );
 }
 
