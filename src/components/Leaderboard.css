@@ -57,3 +57,17 @@
 .section:last-child > span {
   margin-left: auto;
 }
+
+.highlight {
+  background: linear-gradient(
+    90deg,
+    rgba(33, 150, 243, 0.5) 0%,
+    rgba(33, 150, 243, 0.5) 0.4%,
+    rgba(33, 150, 243, 0.2) 0.4%,
+    rgba(33, 150, 243, 0) 100%
+  );
+}
+
+.highlight-text {
+  color: var(--accent-color);
+}

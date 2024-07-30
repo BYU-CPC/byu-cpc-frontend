@@ -61,11 +61,11 @@ export function Leaderboard() {
                 ))}
             </div>
           </div>
-          <div className="flexRow">
+          <div className="flexRow gap-8">
             {!!thisWeek?.kattis &&
               thisWeek.kattis.map((problemId: string) => (
                 <div
-                  className={`center rounded py-10 ellipsis shrink-tiny ${
+                  className={`center rounded py-4 ellipsis shrink-tiny ${
                     solvedProblems.kattis.get(problemId) === 1
                       ? "outline-green"
                       : solvedProblems.kattis.get(problemId) === 2
@@ -112,8 +112,13 @@ export function Leaderboard() {
       {users
         .filter((a) => !!a.score || a.id === user?.uid)
         .sort((a, b) => b.score - a.score)
-        .map((user, index) => (
-          <LeaderboardRow key={user.id} user={user} rank={index + 1} />
+        .map((u, i) => (
+          <LeaderboardRow
+            key={u.id}
+            user={u}
+            rank={i + 1}
+            isMe={u.id === user?.uid}
+          />
         ))}
     </div>
   );

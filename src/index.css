@@ -70,6 +70,10 @@ code {
   padding-top: 10px;
   padding-bottom: 10px;
 }
+.py-4 {
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
 .mb-12 {
   margin-bottom: 12px;
 }
@@ -151,6 +155,14 @@ code {
   filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.2));
 }
 
+.tiny {
+  font-size: 0.3rem;
+}
+
+.transparent {
+  color: #0000;
+}
+
 .small {
   font-size: 0.8rem;
 }
@@ -170,6 +182,10 @@ code {
 
 .gap-12 {
   gap: 12px;
+}
+
+.gap-8 {
+  gap: 8px;
 }
 
 .mw-80 {
