@@ -3,8 +3,8 @@ import Flame from "../icons/Flame";
 import FlameBorder from "../icons/FlameBorder";
 import DeadFlame from "../icons/DeadFlame";
 import React from "react";
-import { User } from "../hooks/UseUser";
 import { useThisWeek } from "../hooks/UseWeek";
+import { UserStats } from "../score/score";
 function WeeklyProblemBox({
   solved,
   allProblemsLength,
@@ -23,24 +23,25 @@ function WeeklyProblemBox({
     </div>
   );
 }
+function numberWithCommas(x: number) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
 
 type LeaderboardRowProps = {
-  user: User;
+  userStats: UserStats;
   rank: number;
   isMe: boolean;
 };
 
-export function LeaderboardRow({ user, rank, isMe }: LeaderboardRowProps) {
+export function LeaderboardRow({ userStats, rank, isMe }: LeaderboardRowProps) {
+  const userId = userStats.user.id;
   const thisWeek = useThisWeek();
   const allProblemsLength = thisWeek.kattis.length + thisWeek.codeforces.length;
-  const solvedKattis = new Set(Object.keys(user.kattis_submissions));
-  const solvedCodeforces = new Set(Object.keys(user.codeforces_submissions));
-  const validSolvedKattis = new Set(
-    user.kattis_data.map((problem) => problem.id)
+  const solvedKattis = new Set(Object.keys(userStats.user.kattis_submissions));
+  const solvedCodeforces = new Set(
+    Object.keys(userStats.user.codeforces_submissions)
   );
-  const validSolvedCodeforces = new Set(
-    user.cf_data.problems.map((problem) => problem.id)
-  );
+
   return (
     <div className="bg-secondary responsive-fg">
       <div className={"flexCol  rounded " + (isMe ? "highlight" : "")}>
@@ -50,7 +51,7 @@ export function LeaderboardRow({ user, rank, isMe }: LeaderboardRowProps) {
               <WeeklyProblemBox
                 key={problemId}
                 solved={
-                  validSolvedKattis.has(problemId)
+                  userStats.solvedDuringContest["kattis"].has(problemId)
                     ? 2
                     : solvedKattis.has(problemId)
                     ? 1
@@ -64,7 +65,7 @@ export function LeaderboardRow({ user, rank, isMe }: LeaderboardRowProps) {
               <WeeklyProblemBox
                 key={problemId}
                 solved={
-                  validSolvedCodeforces.has(problemId)
+                  userStats.solvedDuringContest["codeforces"].has(problemId)
                     ? 2
                     : solvedCodeforces.has(problemId)
                     ? 1
@@ -78,25 +79,26 @@ export function LeaderboardRow({ user, rank, isMe }: LeaderboardRowProps) {
           <div className="section flexCol">
             <div className="flexRow">
               <div className={isMe ? "highlight-text" : ""}>
-                {rank}. <span className="bold">{user.display_name} </span>
+                {rank}.{" "}
+                <span className="bold">{userStats.user.display_name} </span>
               </div>
               <div
                 className="streak relative flex-center "
-                data-tooltip-id={user.id + "-streak"}
+                data-tooltip-id={userId + "-streak"}
               >
-                {user.cur_streak > 0 && (
+                {userStats.streak.currentStreak > 0 && (
                   <div
                     className={
                       "z1 relative streakText bold pop-shadow " +
-                      (user.is_active ? "fg-white" : "")
+                      (userStats.streak.isActive ? "fg-white" : "")
                     }
                   >
-                    {user.cur_streak}
+                    {userStats.streak.currentStreak}
                   </div>
                 )}
-                {user.is_active ? (
+                {userStats.streak.isActive ? (
                   <Flame className="bgImage full flame" />
-                ) : user.cur_streak ? (
+                ) : userStats.streak.currentStreak ? (
                   <FlameBorder className="bgImage full flame" />
                 ) : (
                   <DeadFlame className="bgImage full flame" />
@@ -106,111 +108,78 @@ export function LeaderboardRow({ user, rank, isMe }: LeaderboardRowProps) {
             <div className="flexRow gap-12">
               <div>
                 <span className="small">Lv.</span>{" "}
-                <span className="bold">{user.level}</span>
+                <span className="bold">{userStats.level.level}</span>
               </div>
               <div>
                 <span className="small">Score:</span>{" "}
-                <span className="">{user.score}</span>
+                <span className="">{numberWithCommas(userStats.score)}</span>
               </div>
             </div>
           </div>
           <div className="flexRow gap-12 wrap section">
-            <div>{user.days.length} days</div>
-            <div>{user.cf_data.contests.length} contests</div>
-            <div>
-              {user.cf_data.problems.length + user.kattis_data.length} problems
-            </div>
+            <div>{userStats.exp.size} days</div>
+            <div>{userStats.contests.size} contests</div>
+            <div>{userStats.problemCount} problems</div>
           </div>
           <div className="flexRow  gap-12 section">
             <div>Avg. Diff.</div>
-            {!!user.kattis_data.length && (
+            {!!userStats.avgDifficulty["kattis"] && (
               <div
                 className="flexRow   gap-12"
-                data-tooltip-id={user.id + "-kattis"}
+                data-tooltip-id={userId + "-kattis"}
               >
                 <div>Kattis</div>
-                <div className="bold">
-                  {Math.round(
-                    (user.kattis_data.reduce((a, b) => a + b.difficulty, 0) /
-                      user.kattis_data.length) *
-                      10
-                  ) / 10}
-                </div>
+                <div className="bold">{userStats.avgDifficulty["kattis"]}</div>
               </div>
             )}
-            {!!user.cf_data.problems.length && (
+            {!!userStats.avgDifficulty["codeforces"] && (
               <div
                 className="flexRow  gap-12"
-                data-tooltip-id={user.id + "-codeforces"}
+                data-tooltip-id={userId + "-codeforces"}
               >
                 <div>Codeforces</div>
                 <div className="bold">
-                  {Math.round(
-                    user.cf_data.problems.reduce(
-                      (a, b) => a + b.difficulty,
-                      0
-                    ) / user.cf_data.problems.length
-                  )}
+                  {userStats.avgDifficulty["codeforces"]}
                 </div>
               </div>
             )}
           </div>
         </div>
-        <div className="expBar w-full" data-tooltip-id={user.id + "-exp"}>
+        <div className="expBar w-full" data-tooltip-id={userId + "-exp"}>
           <div
             className="expBarFill h-full"
             style={{
               width: `${
-                (user.cur_exp / (user.cur_exp + user.next_level)) * 100
+                (userStats.level.currentExp /
+                  (userStats.level.currentExp + userStats.level.nextLevel)) *
+                100
               }%`,
             }}
           />
         </div>
-        <Tooltip id={user.id + "-streak"}>
+        <Tooltip id={userId + "-streak"}>
           <div>
-            <div>Current Streak: {user.cur_streak}</div>
-            <div>Best Streak: {user.max_streak}</div>
+            <div>Current Streak: {userStats.streak.currentStreak}</div>
+            <div>Best Streak: {userStats.streak.maximumStreak}</div>
           </div>
         </Tooltip>
-        <Tooltip id={user.id + "-exp"}>
-          {user.cur_exp} / {user.cur_exp + user.next_level} XP
+        <Tooltip id={userId + "-exp"}>
+          {userStats.level.currentExp} /{" "}
+          {userStats.level.currentExp + userStats.level.nextLevel} XP
         </Tooltip>
-        <Tooltip id={user.id + "-kattis"}>
+        <Tooltip id={userId + "-kattis"}>
           <div>
             <div>
-              <div>
-                Avg difficulty:{" "}
-                {Math.round(
-                  (user.kattis_data.reduce((a, b) => a + b.difficulty, 0) /
-                    user.kattis_data.length) *
-                    10
-                ) / 10}
-              </div>
-              <div>
-                Max difficulty:{" "}
-                {Math.max(
-                  ...user.kattis_data.map((problem) => problem.difficulty)
-                )}
-              </div>
+              <div>Avg difficulty: {userStats.avgDifficulty["kattis"]}</div>
+              <div>Max difficulty: {userStats.maxDifficulty["kattis"]}</div>
             </div>
           </div>
         </Tooltip>
-        <Tooltip id={user.id + "-codeforces"}>
+        <Tooltip id={userId + "-codeforces"}>
           <div>
             <div>
-              <div>
-                Avg difficulty:{" "}
-                {Math.round(
-                  user.cf_data.problems.reduce((a, b) => a + b.difficulty, 0) /
-                    user.cf_data.problems.length
-                )}
-              </div>
-              <div>
-                Max difficulty:{" "}
-                {Math.max(
-                  ...user.cf_data.problems.map((problem) => problem.difficulty)
-                )}
-              </div>
+              <div>Avg difficulty: {userStats.avgDifficulty["codeforces"]}</div>
+              <div>Max difficulty: {userStats.maxDifficulty["codeforces"]}</div>
             </div>
           </div>
         </Tooltip>

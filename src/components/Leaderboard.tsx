@@ -4,6 +4,10 @@ import "./Leaderboard.css";
 import { useUsers } from "../hooks/UseUser";
 import { LeaderboardRow } from "./LeaderboardRow";
 import { useThisWeek } from "../hooks/UseWeek";
+import { useSearchParams } from "react-router-dom";
+import { useAllStudyProblems, useProblems } from "../hooks/UseProblem";
+import { useQueries } from "@tanstack/react-query";
+import { getStats } from "../score/score";
 
 function formatCodeforcesId(input: string) {
   const match = input.match(/^(\d+)(\D.*)$/);
@@ -34,15 +38,32 @@ export function Leaderboard() {
       solvedProblems.codeforces.set(problem, 1);
     }
   }
-  for (const user of users) {
-    for (const problem of user.kattis_data) {
-      solvedProblems.kattis.set(problem.id, 2);
+  const links = thisWeek.links ?? {};
+  const [params] = useSearchParams();
+  const leaderboard = params.get("leaderboard") || "all";
+  const { data: allProblems } = useProblems();
+  const { data: allStudyProblems } = useAllStudyProblems();
+  const calculatedUsers = useQueries({
+    queries: users.map((user) => ({
+      queryKey: [leaderboard, "score", user.id],
+      queryFn: async () => {
+        return allProblems && allStudyProblems
+          ? getStats(user, allProblems, allStudyProblems)
+          : null;
+      },
+      enabled: !!allProblems && !!allStudyProblems,
+      staleTime: 1000 * 60 * 5,
+    })),
+    combine: (results) => results.map((r) => r.data).filter((a) => !!a),
+  });
+  for (const user of calculatedUsers) {
+    for (const problem of user.solvedDuringContest["kattis"]) {
+      solvedProblems.kattis.set(problem, 2);
     }
-    for (const problem of user.cf_data.problems) {
-      solvedProblems.codeforces.set(problem.id, 2);
+    for (const problem of user.solvedDuringContest["codeforces"]) {
+      solvedProblems.codeforces.set(problem, 2);
     }
   }
-  const links = thisWeek.links ?? {};
   return (
     <div className="Leaderboard flexCol w-full align-center">
       {thisWeek.topic && (
@@ -57,7 +78,9 @@ export function Leaderboard() {
               {Object.keys(links)
                 .sort()
                 .map((key) => (
-                  <a href={links[key]}>{key}</a>
+                  <a key={key} href={links[key]}>
+                    {key}
+                  </a>
                 ))}
             </div>
           </div>
@@ -109,15 +132,15 @@ export function Leaderboard() {
           </div>
         </div>
       )}
-      {users
-        .filter((a) => !!a.score || a.id === user?.uid)
+      {calculatedUsers
+        .filter((a) => !!a.score || a.user.id === user?.uid)
         .sort((a, b) => b.score - a.score)
         .map((u, i) => (
           <LeaderboardRow
-            key={u.id}
-            user={u}
+            key={u.user.id}
+            userStats={u}
             rank={i + 1}
-            isMe={u.id === user?.uid}
+            isMe={u.user?.id === user?.uid}
           />
         ))}
     </div>

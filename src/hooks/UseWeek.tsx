@@ -18,6 +18,7 @@ export const useThisWeek = () => {
     queryKey: ["this_week"],
     queryFn: getThisWeek,
     refetchOnWindowFocus: true,
+    staleTime: 1000 * 60 * 5,
   });
   const data = weekQuery.data;
   if (!data) return { codeforces: [], kattis: [], topic: "", start: "" };
