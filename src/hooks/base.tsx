@@ -1,1 +1,1 @@
-export const BACKEND_URL = "https://byu-cpc-backend-tqxfeezgfa-uw.a.run.app";
+export const BACKEND_URL = "http://localhost:5000";

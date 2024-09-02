@@ -5,8 +5,8 @@ import { useUserProfile } from "../hooks/UseProfile";
 import useUser from "../hooks/UseProfile";
 import { useDebounce } from "use-debounce";
 import axios from "axios";
-import { BACKEND_URL } from "../App";
 import { useMutation } from "@tanstack/react-query";
+import { BACKEND_URL } from "../hooks/base";
 
 async function isPlatformUsernameValid(username: string, platform: string) {
   if (!username) {

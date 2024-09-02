@@ -26,12 +26,11 @@ const config = {
   authDomain: "byu-cpc.firebaseapp.com",
 };
 firebase.initializeApp(config);
-export const BACKEND_URL = "https://byu-cpc-backend-tqxfeezgfa-uw.a.run.app";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       gcTime: 1000 * 60 * 60 * 24 * 7, // 1 week
-      staleTime: 1000 * 60,
+      staleTime: 1000,
       persister: experimental_createPersister({
         buster: "1.0.1",
         storage: createIdbStorage(),

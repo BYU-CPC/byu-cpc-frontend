@@ -12,7 +12,7 @@ import {
   setPersistence,
   browserLocalPersistence,
 } from "firebase/auth";
-import { BACKEND_URL } from "../App";
+import { BACKEND_URL } from "../hooks/base";
 
 function LogIn() {
   const navigate = useNavigate();
