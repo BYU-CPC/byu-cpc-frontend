@@ -5,6 +5,7 @@ import DeadFlame from "../icons/DeadFlame";
 import React from "react";
 import { useThisWeek } from "../hooks/UseWeek";
 import { UserStats } from "../score/score";
+import ProgressBar from "./ProgressBar";
 function WeeklyProblemBox({
   solved,
   allProblemsLength,
@@ -17,7 +18,7 @@ function WeeklyProblemBox({
       className={`center rounded tiny transparent ${
         solved === 2 ? "bg-green" : solved === 1 ? "outline-green" : ""
       }`}
-      style={{ width: `${100 / allProblemsLength}%` }}
+      style={{ width: `${100 / allProblemsLength}%`, userSelect: "none" }}
     >
       ✓
     </div>
@@ -106,7 +107,7 @@ export function LeaderboardRow({ userStats, rank, isMe }: LeaderboardRowProps) {
               </div>
             </div>
             <div className="flexRow gap-12">
-              <div>
+              <div data-tooltip-id={userId + "-exp"}>
                 <span className="small">Lv.</span>{" "}
                 <span className="bold">{userStats.level.level}</span>
               </div>
@@ -145,7 +146,13 @@ export function LeaderboardRow({ userStats, rank, isMe }: LeaderboardRowProps) {
             )}
           </div>
         </div>
-        <div className="expBar w-full" data-tooltip-id={userId + "-exp"}>
+        <ProgressBar
+          progress={
+            userStats.level.currentExp /
+            (userStats.level.currentExp + userStats.level.nextLevel)
+          }
+        />
+        <div className="expBar w-full">
           <div
             className="expBarFill h-full"
             style={{

@@ -31,6 +31,5 @@ export const useUsers = () => {
       });
     }
   }
-  console.log(query.data);
   return query.data ?? [];
 };

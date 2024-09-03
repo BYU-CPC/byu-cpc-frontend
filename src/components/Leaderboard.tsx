@@ -8,6 +8,7 @@ import { useSearchParams } from "react-router-dom";
 import { useAllStudyProblems, useProblems } from "../hooks/UseProblem";
 import { useQueries } from "@tanstack/react-query";
 import { getStats } from "../score/score";
+import { useLeaderboardIndex } from "../hooks/UseLeaderboard";
 
 function formatCodeforcesId(input: string) {
   const match = input.match(/^(\d+)(\D.*)$/);
@@ -43,15 +44,18 @@ export function Leaderboard() {
   const leaderboard = params.get("leaderboard") || "all";
   const { data: allProblems } = useProblems();
   const { data: allStudyProblems } = useAllStudyProblems();
+  const { data: leaderboardIndex } = useLeaderboardIndex();
+  const leaderboardData = leaderboardIndex?.[leaderboard];
+
   const calculatedUsers = useQueries({
     queries: users.map((user) => ({
       queryKey: [leaderboard, "score", user.id],
       queryFn: async () => {
-        return allProblems && allStudyProblems
-          ? getStats(user, allProblems, allStudyProblems)
-          : null;
+        return allProblems && allStudyProblems && leaderboardData
+          ? getStats(user, allProblems, allStudyProblems, leaderboardData)
+          : undefined;
       },
-      enabled: !!allProblems && !!allStudyProblems,
+      enabled: !!allProblems && !!allStudyProblems && !!leaderboardData,
       staleTime: 1000 * 60 * 5,
     })),
     combine: (results) => results.map((r) => r.data).filter((a) => !!a),

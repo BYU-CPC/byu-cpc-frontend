@@ -1,14 +1,13 @@
+import type { Leaderboard } from "../hooks/UseLeaderboard";
 import { AllProblems, StudyProblems } from "../hooks/UseProblem";
 import { User } from "../hooks/UseUser";
 import { Platform, platformValues } from "../types/platform";
 
-const START = new Date("2024-05-21T00:00:00.0");
-const END = new Date("2024-09-12T18:00:00.0");
 const DIFFICULTY_EXPO = 1.2;
 const CONTEST_BONUS = 100;
 const DAILY_BONUS = 10;
-const getDayFromDate = (date: Date) => {
-  return Math.floor((date.getTime() - START.getTime()) / (1000 * 60 * 60 * 24));
+const getDayFromDate = (date: Date, start: Date) => {
+  return Math.floor((date.getTime() - start.getTime()) / (1000 * 60 * 60 * 24));
 };
 
 const kattisDifficultyToExp = (difficulty: number) => {
@@ -28,32 +27,32 @@ const fallbackDifficulty = {
   codeforces: 800,
 } as const satisfies Record<Platform, number>;
 
-const get_weekday_from_day = (day: number) => {
-  return new Date(START.getTime() + day * 1000 * 60 * 60 * 24).getDay();
+const get_weekday_from_day = (day: number, start: Date) => {
+  return new Date(start.getTime() + day * 1000 * 60 * 60 * 24).getDay();
 };
 
-const skippable = (day: number) => {
-  return get_weekday_from_day(day) === 0;
+const skippable = (day: number, start: Date) => {
+  return get_weekday_from_day(day, start) === 0;
 };
 
-const getCurrentStreak = (days: Set<number>) => {
-  let today = getDayFromDate(new Date());
+const getCurrentStreak = (days: Set<number>, start: Date) => {
+  let today = getDayFromDate(new Date(), start);
   let count = days.has(today) ? 1 : 0;
   today--;
-  while (days.has(today) || skippable(today)) {
+  while (days.has(today) || skippable(today, start)) {
     if (days.has(today)) count++;
     today--;
   }
   return count;
 };
 
-const getMaximumStreak = (days: number[]) => {
+const getMaximumStreak = (days: number[], start: Date) => {
   const daysSet = new Set(days);
   days.sort((a, b) => a - b);
   let best = 0;
   let cur = 0;
   for (const i of days) {
-    if (daysSet.has(i - 1) || (daysSet.has(i - 2) && skippable(i - 1))) {
+    if (daysSet.has(i - 1) || (daysSet.has(i - 2) && skippable(i - 1, start))) {
       cur++;
     } else {
       cur = 1;
@@ -63,11 +62,11 @@ const getMaximumStreak = (days: number[]) => {
   return best;
 };
 
-const getStreaks = (days: number[]) => {
+const getStreaks = (days: number[], start: Date) => {
   return {
-    currentStreak: getCurrentStreak(new Set(days)),
-    maximumStreak: getMaximumStreak(days),
-    isActive: days.includes(getDayFromDate(new Date())),
+    currentStreak: getCurrentStreak(new Set(days), start),
+    maximumStreak: getMaximumStreak(days, start),
+    isActive: days.includes(getDayFromDate(new Date(), start)),
   };
 };
 
@@ -85,7 +84,8 @@ const getLevel = (score: number) => {
 export function getStats(
   user: User,
   allProblems: AllProblems,
-  studyProblems: StudyProblems
+  studyProblems: StudyProblems,
+  leaderboard: Leaderboard
 ) {
   const kattisSubmissions: Record<string, { type: "practice"; time: number }> =
     Object.keys(user.kattis_submissions).reduce(
@@ -116,8 +116,8 @@ export function getStats(
     )) {
       if (
         problemId === "contests" ||
-        submission.time < START.getTime() / 1000 ||
-        submission.time > END.getTime() / 1000
+        submission.time < leaderboard.start.getTime() / 1000 ||
+        submission.time > leaderboard.end.getTime() / 1000
       ) {
         continue;
       }
@@ -129,7 +129,10 @@ export function getStats(
       difficultyTotal[platform] += difficulty;
       difficultyCount[platform] += 1;
       maxDifficulty[platform] = Math.max(maxDifficulty[platform], difficulty);
-      const day = getDayFromDate(new Date(submission.time * 1000));
+      const day = getDayFromDate(
+        new Date(submission.time * 1000),
+        leaderboard.start
+      );
       const current_exp = exp.get(day) ?? DAILY_BONUS;
       const multiplier =
         submission.type === "contestant" ||
@@ -150,7 +153,7 @@ export function getStats(
       contests.size * CONTEST_BONUS
   );
   const level = getLevel(score);
-  const streak = getStreaks([...exp.keys()]);
+  const streak = getStreaks([...exp.keys()], leaderboard.start);
 
   return {
     exp,

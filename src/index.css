@@ -10,6 +10,7 @@
   --bg-greenish: #32a85233;
   --fg-color: #333;
   --accent-color: #2196f3;
+  --accent-color-two: #21c2f3;
   --fg-accent: #555;
   --fg-secondary: #0004;
   --rt-transition-show-delay: 1s !important;
@@ -109,7 +110,6 @@ code {
 
 .responsive-fg {
   width: min(90%, 1200px);
-  border-radius: 5px;
 }
 
 .wrap {
@@ -241,7 +241,6 @@ button {
   background-color: var(--bg-tertiary);
   color: var(--fg-accent);
   padding: 10px;
-  border-radius: 5px;
   cursor: pointer;
 }
 button:disabled {
@@ -254,7 +253,6 @@ input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus {
   padding: 10px;
-  border-radius: 5px;
   border: 1px solid var(--fg-secondary);
   background-color: var(--bg-tertiary);
   color: var(--fg-color);

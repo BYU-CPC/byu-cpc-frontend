@@ -2,18 +2,6 @@
   gap: 20px;
 }
 
-.expBar {
-  background-color: var(--bg-color);
-  height: 4px;
-}
-
-.expBarFill {
-  background-color: #2196f3;
-  border-radius: 5px;
-  /* glow */
-  box-shadow: 0 0 10px #2196f399;
-}
-
 .relative {
   position: relative;
 }
