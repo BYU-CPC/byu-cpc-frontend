@@ -17,7 +17,6 @@
 .auth {
   width: min(90%, 400px);
   padding: 20px;
-  border-radius: 10px;
 }
 
 .sign-in-form {
@@ -34,7 +33,6 @@
 
 .submit {
   padding: 10px;
-  border-radius: 5px;
   border: transparent;
   background-color: var(--fg-color);
   color: var(--bg-color);

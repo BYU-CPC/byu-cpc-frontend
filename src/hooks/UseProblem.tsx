@@ -27,5 +27,6 @@ export const useAllStudyProblems = () => {
   return useQuery({
     queryFn: getAllStudyProblems,
     queryKey: ["allStudyProblems"],
+    staleTime: 1000 * 60 * 60,
   });
 };
