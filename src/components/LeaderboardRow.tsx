@@ -40,7 +40,7 @@ export function LeaderboardRow({ userStats, rank, isMe }: LeaderboardRowProps) {
   const allProblemsLength = thisWeek.kattis.length + thisWeek.codeforces.length;
   const solvedKattis = new Set(Object.keys(userStats.user.kattis_submissions));
   const solvedCodeforces = new Set(
-    Object.keys(userStats.user.codeforces_submissions)
+    Object.keys(userStats.user.codeforces_submissions ?? {})
   );
 
   return (

@@ -81,6 +81,11 @@ const getLevel = (score: number) => {
   return { level, nextLevel, currentExp };
 };
 
+const emptyCodeforces: Record<
+  string,
+  { type: "practice" | "contestant" | "virtual"; time: number }
+> = {};
+
 export function getStats(
   user: User,
   allProblems: AllProblems,
@@ -96,7 +101,7 @@ export function getStats(
       {}
     );
   const all_submissions = {
-    codeforces: user.codeforces_submissions,
+    codeforces: user.codeforces_submissions ?? emptyCodeforces,
     kattis: kattisSubmissions,
   };
   let problemCount = 0;

@@ -14,6 +14,7 @@ import {
   type AsyncStorage,
   type PersistedQuery,
 } from "@tanstack/react-query-persist-client";
+import { BUSTER } from "./hooks/base";
 function createIdbStorage(): AsyncStorage<PersistedQuery> {
   return {
     getItem: async (key) => await get(key),
@@ -32,7 +33,7 @@ const queryClient = new QueryClient({
       gcTime: 1000 * 60 * 60 * 24 * 7, // 1 week
       staleTime: 1000,
       persister: experimental_createPersister({
-        buster: "1.0.1",
+        buster: BUSTER,
         storage: createIdbStorage(),
         maxAge: 1000 * 60 * 60 * 24 * 7, // 1 week
         serialize: (persistedQuery) => persistedQuery,
