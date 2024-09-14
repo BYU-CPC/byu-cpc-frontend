@@ -1,11 +1,10 @@
 import React from "react";
 import UserBadge from "./UserBadge";
-import { useSearchParams } from "react-router-dom";
 import Countdown from "./Countdown";
+import { useCurrentLeaderboard } from "../hooks/UseLeaderboard";
 
 const Sidebar = ({ children }: React.PropsWithChildren) => {
-  const [params] = useSearchParams();
-  const leaderboard = params.get("leaderboard") ?? "all";
+  const leaderboard = useCurrentLeaderboard();
   return (
     <div className="flexCol align-center">
       <div className="shadow w-full flexRow space-between  bg-secondary flex-center">

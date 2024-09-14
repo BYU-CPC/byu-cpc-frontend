@@ -1,10 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { BACKEND_URL } from "./base";
+import { Platform, platformValues } from "../types/platform";
+import { useSearchParams } from "react-router-dom";
 
-export type Leaderboard = { start: Date; end: Date };
+export type LeaderboardEntry = { start: Date; end: Date };
 
-export type LeaderboardIndex = Record<string, Leaderboard>;
+export type LeaderboardIndex = Record<string, LeaderboardEntry>;
 type LeaderboardResponse = Record<
   string,
   {
@@ -36,4 +38,53 @@ export const useLeaderboardIndex = () => {
       )
     : undefined;
   return { ...query, data: transformedData };
+};
+
+type PracticeWeek = string;
+
+export type Leaderboard = {
+  practice_set?: Record<
+    PracticeWeek,
+    { topic: string; links: Record<string, string> } & Partial<
+      Record<Platform, string[]>
+    >
+  >;
+  school?: string;
+};
+
+export type StudyProblems = Record<Platform, Set<string>>;
+
+const getLeaderboard = async (id: string): Promise<Leaderboard> => {
+  return (await axios.get(`${BACKEND_URL}/leaderboard/${id}`)).data;
+};
+
+export const useLeaderboard = (id: string) => {
+  const query = useQuery({
+    queryKey: ["leaderboard", id],
+    queryFn: () => getLeaderboard(id),
+    staleTime: 1000 * 60 * 5,
+  });
+  if (!query.data) return query;
+  const practiceSets = Object.entries(query.data.practice_set ?? {})
+    .map(([key, value]) => ({ ...value, start: key }))
+    .sort((a, b) => a.start.localeCompare(b.start));
+  const allProblems = practiceSets.reduce((acc, week) => {
+    platformValues.forEach((platform) => {
+      const problems = week[platform];
+      problems?.forEach((problem) => {
+        acc[platform].add(problem);
+      });
+    });
+    return acc;
+  }, platformValues.reduce((x, platform) => ({ ...x, [platform]: new Set<string>() }), {}) as StudyProblems);
+  const thisWeek = practiceSets.at(practiceSets.length - 1);
+  return {
+    ...query,
+    data: { allProblems, practiceSets, thisWeek },
+  };
+};
+
+export const useCurrentLeaderboard = () => {
+  const [params] = useSearchParams();
+  return params.get("leaderboard") ?? "byu_summer_24";
 };
