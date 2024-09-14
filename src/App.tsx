@@ -76,18 +76,11 @@ const router = createBrowserRouter([
     path: "/profile",
     lazy: () => import("./pages/Profile"),
   },
-  {
-    path: "/hspc",
-    loader: () => {
-      window.location.replace("/hspc.html");
-      return null;
-    },
-  },
 ]);
 
 export default function App() {
   useEffect(() => {
-    document.title = "BYU CPC Challenge";
+    document.title = "BYU CPC";
   }, []);
   return (
     <StrictMode>
