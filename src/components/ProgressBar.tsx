@@ -10,6 +10,7 @@ function ProgressBar({
   className?: string;
   fontSize?: string;
 }) {
+  const clampedProgress = Math.min(1, Math.max(0, progress));
   const size = fontSize ?? "10px";
   return (
     <div
@@ -20,7 +21,7 @@ function ProgressBar({
         className=" "
         style={{
           position: "absolute",
-          width: `${progress * 100}%`,
+          width: `${clampedProgress * 100}%`,
           minHeight: "1px",
           backgroundColor: "var(--accent-color)",
           background: `linear-gradient(90deg, var(--accent-color) 0%, var(--accent-color-two) 100%)`,
