@@ -3,9 +3,9 @@ import Flame from "../icons/Flame";
 import FlameBorder from "../icons/FlameBorder";
 import DeadFlame from "../icons/DeadFlame";
 import React from "react";
-import { useThisWeek } from "../hooks/UseWeek";
 import { UserStats } from "../score/score";
 import ProgressBar from "./ProgressBar";
+import { useCurrentLeaderboard, useLeaderboard } from "../hooks/UseLeaderboard";
 function WeeklyProblemBox({
   solved,
   allProblemsLength,
@@ -36,8 +36,11 @@ type LeaderboardRowProps = {
 
 export function LeaderboardRow({ userStats, rank, isMe }: LeaderboardRowProps) {
   const userId = userStats.user.id;
-  const thisWeek = useThisWeek();
-  const allProblemsLength = thisWeek.kattis.length + thisWeek.codeforces.length;
+  const leaderboard = useCurrentLeaderboard();
+  const { data } = useLeaderboard(leaderboard);
+  const thisWeek = data?.thisWeek;
+  const allProblemsLength =
+    (thisWeek?.kattis?.length ?? 0) + (thisWeek?.codeforces?.length ?? 0);
   const solvedKattis = new Set(Object.keys(userStats.user.kattis_submissions));
   const solvedCodeforces = new Set(
     Object.keys(userStats.user.codeforces_submissions ?? {})

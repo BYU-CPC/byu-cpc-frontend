@@ -1,5 +1,5 @@
-import type { Leaderboard } from "../hooks/UseLeaderboard";
-import { AllProblems, StudyProblems } from "../hooks/UseProblem";
+import type { LeaderboardEntry, StudyProblems } from "../hooks/UseLeaderboard";
+import { AllProblems } from "../hooks/UseProblem";
 import { User } from "../hooks/UseUser";
 import { Platform, platformValues } from "../types/platform";
 
@@ -90,7 +90,7 @@ export function getStats(
   user: User,
   allProblems: AllProblems,
   studyProblems: StudyProblems,
-  leaderboard: Leaderboard
+  leaderboard: LeaderboardEntry
 ) {
   const kattisSubmissions: Record<string, { type: "practice"; time: number }> =
     Object.keys(user.kattis_submissions).reduce(
@@ -141,7 +141,7 @@ export function getStats(
       const current_exp = exp.get(day) ?? DAILY_BONUS;
       const multiplier =
         submission.type === "contestant" ||
-        studyProblems[platform].includes(problemId)
+        studyProblems[platform].has(problemId)
           ? 2
           : 1;
       if (submission.type === "contestant") {

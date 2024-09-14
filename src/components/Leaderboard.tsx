@@ -3,12 +3,14 @@ import useUser from "../hooks/UseProfile";
 import "./Leaderboard.css";
 import { useUsers } from "../hooks/UseUser";
 import { LeaderboardRow } from "./LeaderboardRow";
-import { useThisWeek } from "../hooks/UseWeek";
-import { useSearchParams } from "react-router-dom";
-import { useAllStudyProblems, useProblems } from "../hooks/UseProblem";
+import { useProblems } from "../hooks/UseProblem";
 import { useQueries } from "@tanstack/react-query";
 import { getStats } from "../score/score";
-import { useLeaderboardIndex } from "../hooks/UseLeaderboard";
+import {
+  useCurrentLeaderboard,
+  useLeaderboard,
+  useLeaderboardIndex,
+} from "../hooks/UseLeaderboard";
 
 function formatCodeforcesId(input: string) {
   const match = input.match(/^(\d+)(\D.*)$/);
@@ -22,8 +24,13 @@ function formatCodeforcesId(input: string) {
 export function Leaderboard() {
   const user = useUser();
   const users = useUsers();
-  const thisWeek = useThisWeek();
-  const allProblemsLength = thisWeek.kattis.length + thisWeek.codeforces.length;
+  const leaderboard = useCurrentLeaderboard();
+
+  const { data } = useLeaderboard(leaderboard);
+  const thisWeek = data?.thisWeek;
+  const allStudyProblems = data?.allProblems;
+  const allProblemsLength =
+    (thisWeek?.kattis?.length ?? 0) + (thisWeek?.codeforces?.length ?? 0);
   const solvedProblems: {
     kattis: Map<string, number>;
     codeforces: Map<string, number>;
@@ -39,11 +46,8 @@ export function Leaderboard() {
       solvedProblems.codeforces.set(problem, 1);
     }
   }
-  const links = thisWeek.links ?? {};
-  const [params] = useSearchParams();
-  const leaderboard = params.get("leaderboard") || "all";
+  const links = thisWeek?.links ?? {};
   const { data: allProblems } = useProblems();
-  const { data: allStudyProblems } = useAllStudyProblems();
   const { data: leaderboardIndex } = useLeaderboardIndex();
   const leaderboardData = leaderboardIndex?.[leaderboard];
 
@@ -56,7 +60,6 @@ export function Leaderboard() {
           : undefined;
       },
       enabled: !!allProblems && !!allStudyProblems && !!leaderboardData,
-      staleTime: 1000 * 60 * 5,
     })),
     combine: (results) => results.map((r) => r.data).filter((a) => !!a),
   });
@@ -70,7 +73,7 @@ export function Leaderboard() {
   }
   return (
     <div className="Leaderboard flexCol w-full align-center">
-      {thisWeek.topic && (
+      {thisWeek?.topic && (
         <div className="responsive-fg bg-secondary flexCol">
           <div className="align-center">
             <h4 className="large text-green-400">
