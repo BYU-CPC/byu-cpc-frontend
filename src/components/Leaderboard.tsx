@@ -11,7 +11,6 @@ import {
   useLeaderboard,
   useLeaderboardIndex,
 } from "../hooks/UseLeaderboard";
-import ProgressBar from "./ProgressBar";
 import Countdown from "./Countdown";
 
 function formatCodeforcesId(input: string) {
