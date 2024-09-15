@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import useUser from "../hooks/UseProfile";
 import "./Leaderboard.css";
 import { useUsers } from "../hooks/UseUser";
@@ -50,6 +50,9 @@ export function Leaderboard() {
   const { data: allProblems } = useProblems();
   const { data: leaderboardIndex } = useLeaderboardIndex();
   const leaderboardData = leaderboardIndex?.[leaderboard];
+  useEffect(() => {
+    document.title = leaderboardData?.name ?? "Leaderboard";
+  }, [leaderboardData?.name]);
 
   const calculatedUsers = useQueries({
     queries: users.map((user) => ({

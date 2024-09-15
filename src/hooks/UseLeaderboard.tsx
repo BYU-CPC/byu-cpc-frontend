@@ -11,6 +11,7 @@ type LeaderboardResponse = Record<
   string,
   {
     start: number;
+    name?: string;
     end: number;
   }
 >;
@@ -31,6 +32,7 @@ export const useLeaderboardIndex = () => {
         Object.entries(query.data).map(([key, value]) => [
           key,
           {
+            ...value,
             start: new Date(value.start * 1000),
             end: new Date(value.end * 1000),
           },
