@@ -92,10 +92,12 @@ export function Component() {
   return (
     <Sidebar>
       {profile ? (
-        <div className="responsive-fg flexCol bg-secondary p-10">
-          <h3>{profile.display_name}</h3>
-          <PlatformUsernameSelector platform="kattis" />
-          <PlatformUsernameSelector platform="codeforces" />
+        <div className="flex w-full p-6">
+          <div className="flex flex-col gap-4 bg-secondary p-6 w-full">
+            <h3 className="mb-4">{profile.display_name}</h3>
+            <PlatformUsernameSelector platform="kattis" />
+            <PlatformUsernameSelector platform="codeforces" />
+          </div>
         </div>
       ) : (
         "Loading..."

@@ -11,6 +11,7 @@ import {
   useLeaderboard,
   useLeaderboardIndex,
 } from "../hooks/UseLeaderboard";
+import Countdown from "./Countdown";
 
 function formatCodeforcesId(input: string) {
   const match = input.match(/^(\d+)(\D.*)$/);
@@ -75,16 +76,13 @@ export function Leaderboard() {
     }
   }
   return (
-    <div className="Leaderboard flexCol w-full align-center">
+    <div className="gap-6 flex flex-col w-full items-center overflow-y-scroll pt-6 px-6 md:pt-0">
       {thisWeek?.topic && (
-        <div className="responsive-fg bg-secondary flexCol">
-          <div className="align-center">
-            <h4 className="large text-green-400">
-              Weekly Topic: {thisWeek?.topic}
-            </h4>
-          </div>
-          <div className="align-center flexCol">
-            <div className="flexRow align-center gap-12 mb-12">
+        <div className="w-full bg-secondary flex flex-col static md:sticky top-0 z-20">
+          <Countdown leaderboard={leaderboard} />
+          <h4 className="large text-center">Weekly Topic: {thisWeek?.topic}</h4>
+          <div className="items-center flex flex-col">
+            <div className="flex-row flex items-center gap-3  mb-3">
               {Object.keys(links)
                 .sort()
                 .map((key) => (
@@ -94,11 +92,11 @@ export function Leaderboard() {
                 ))}
             </div>
           </div>
-          <div className="flexRow gap-8">
+          <div className="flex flex-row gap-2">
             {!!thisWeek?.kattis &&
               thisWeek.kattis.map((problemId: string) => (
                 <div
-                  className={`center rounded py-4 ellipsis shrink-tiny ${
+                  className={`center rounded-md truncate shrink-tiny ${
                     solvedProblems.kattis.get(problemId) === 1
                       ? "outline-green"
                       : solvedProblems.kattis.get(problemId) === 2
@@ -119,7 +117,7 @@ export function Leaderboard() {
             {!!thisWeek?.codeforces &&
               thisWeek.codeforces.map((problemId: string) => (
                 <div
-                  className={`center rounded py-10 ellipsis shrink-tiny ${
+                  className={`center rounded-md truncate shrink-tiny ${
                     solvedProblems.codeforces.get(problemId) === 1
                       ? "outline-green"
                       : solvedProblems.codeforces.get(problemId) === 2

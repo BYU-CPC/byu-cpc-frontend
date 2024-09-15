@@ -3,7 +3,7 @@ import { Sidebar } from "../components/Sidebar";
 export function Component() {
   return (
     <Sidebar>
-      <div className="responsive-fg bg-secondary p-10">
+      <div className="responsive-fg bg-secondary p-2">
         <p className="large bold">Chrome</p>
         <p>
           Install the extension for Chrome{" "}
