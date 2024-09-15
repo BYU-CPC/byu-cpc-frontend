@@ -22,12 +22,14 @@ const formatTime = (time: number) => {
 function Countdown({
   leaderboard,
   className,
+  fontSize,
 }: {
   leaderboard: string;
   className?: string;
+  fontSize?: string;
 }) {
   const { data } = useLeaderboardIndex();
-  const board = data?.[leaderboard];
+  const board = data.combined?.[leaderboard];
   const currentTime = useDebounce(new Date(), 500)[0];
   if (!board) return null;
   const timeDisplay = formatTime(board.end.getTime() - currentTime.getTime());
@@ -39,6 +41,7 @@ function Countdown({
       progress={progress}
       display={timeDisplay}
       className={className}
+      fontSize={fontSize}
     />
   );
 }

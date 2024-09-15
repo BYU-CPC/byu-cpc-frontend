@@ -3,6 +3,31 @@ import axios from "axios";
 import { BACKEND_URL } from "./base";
 import { Platform, platformValues } from "../types/platform";
 import { useSearchParams } from "react-router-dom";
+const staticLeaderboardValues = [
+  "week",
+  "three_months",
+  "six_months",
+  "year",
+  "all",
+] as const;
+
+type StaticLearderboard = (typeof staticLeaderboardValues)[number];
+
+export const staticLeaderboardDisplayNames: Record<StaticLearderboard, string> =
+  {
+    week: "This week",
+    three_months: "3 months",
+    six_months: "6 months",
+    year: "This year",
+    all: "All time",
+  };
+const durations: Record<StaticLearderboard, number> = {
+  week: 1000 * 60 * 60 * 24 * 7,
+  three_months: 1000 * 60 * 60 * 24 * 30 * 3,
+  six_months: 1000 * 60 * 60 * 24 * 30 * 6,
+  year: 1000 * 60 * 60 * 24 * 365,
+  all: 1000 * 60 * 60 * 24 * 365 * 100,
+};
 
 export type LeaderboardEntry = { start: Date; end: Date };
 
@@ -27,6 +52,17 @@ export const useLeaderboardIndex = () => {
     queryFn: () => getLeaderboardIndex(),
     staleTime: 1000 * 60 * 60,
   });
+  const staticLeaderboard = Object.fromEntries(
+    staticLeaderboardValues.map((key) => [
+      key,
+      {
+        //subtract the milliseconds from today's time since midnight
+        start: new Date(Date.now() - durations[key] - (Date.now() % 86400000)),
+        end: new Date(),
+        name: staticLeaderboardDisplayNames[key],
+      },
+    ])
+  );
   const transformedData = query.data
     ? Object.fromEntries(
         Object.entries(query.data).map(([key, value]) => [
@@ -39,7 +75,15 @@ export const useLeaderboardIndex = () => {
         ])
       )
     : undefined;
-  return { ...query, data: transformedData };
+  const data = {
+    combined: { ...(transformedData ?? {}), ...staticLeaderboard },
+    dynamic: transformedData ?? {},
+    static: staticLeaderboard,
+  };
+  return {
+    ...query,
+    data,
+  };
 };
 
 type PracticeWeek = string;
@@ -56,7 +100,8 @@ export type Leaderboard = {
 
 export type StudyProblems = Record<Platform, Set<string>>;
 
-const getLeaderboard = async (id: string): Promise<Leaderboard> => {
+const getLeaderboard = async (id: string): Promise<Leaderboard | null> => {
+  if (staticLeaderboardValues.includes(id as StaticLearderboard)) return null;
   return (await axios.get(`${BACKEND_URL}/leaderboard/${id}`)).data;
 };
 
@@ -87,6 +132,6 @@ export const useLeaderboard = (id: string) => {
 };
 
 export const useCurrentLeaderboard = () => {
-  const [params] = useSearchParams();
-  return params.get("leaderboard") ?? "byu_summer_24";
+  const [params, setParams] = useSearchParams();
+  return [params.get("leaderboard") ?? "byu_summer_24", setParams] as const;
 };
