@@ -89,8 +89,8 @@ const emptyCodeforces: Record<
 export function getStats(
   user: User,
   allProblems: AllProblems,
-  studyProblems: StudyProblems,
-  leaderboard: LeaderboardEntry
+  leaderboard: LeaderboardEntry,
+  studyProblems?: StudyProblems
 ) {
   const kattisSubmissions: Record<string, { type: "practice"; time: number }> =
     Object.keys(user.kattis_submissions).reduce(
@@ -100,6 +100,7 @@ export function getStats(
       }),
       {}
     );
+
   const all_submissions = {
     codeforces: user.codeforces_submissions ?? emptyCodeforces,
     kattis: kattisSubmissions,
@@ -141,7 +142,7 @@ export function getStats(
       const current_exp = exp.get(day) ?? DAILY_BONUS;
       const multiplier =
         submission.type === "contestant" ||
-        studyProblems[platform].has(problemId)
+        (studyProblems && studyProblems[platform].has(problemId))
           ? 2
           : 1;
       if (submission.type === "contestant") {

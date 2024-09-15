@@ -37,9 +37,9 @@ type LeaderboardRowProps = {
 
 export function LeaderboardRow({ userStats, rank, isMe }: LeaderboardRowProps) {
   const userId = userStats.user.id;
-  const leaderboard = useCurrentLeaderboard();
+  const [leaderboard] = useCurrentLeaderboard();
   const { data } = useLeaderboard(leaderboard);
-  const thisWeek = data?.thisWeek;
+  const thisWeek = data && "thisWeek" in data ? data.thisWeek : undefined;
   const allProblemsLength =
     (thisWeek?.kattis?.length ?? 0) + (thisWeek?.codeforces?.length ?? 0);
   const solvedKattis = new Set(Object.keys(userStats.user.kattis_submissions));
@@ -48,7 +48,7 @@ export function LeaderboardRow({ userStats, rank, isMe }: LeaderboardRowProps) {
   );
 
   return (
-    <div className="bg-secondary w-full">
+    <div className="bg-secondary w-full rounded-md overflow-hidden flex-none  ">
       <div className={"flex flex-col " + (isMe ? "highlight" : "")}>
         <div className="flex flex-row gap-2">
           {!!thisWeek?.kattis &&
@@ -157,6 +157,7 @@ export function LeaderboardRow({ userStats, rank, isMe }: LeaderboardRowProps) {
           </div>
         </div>
         <ProgressBar
+          className="translate-y-[-1px]"
           progress={
             userStats.level.currentExp /
             (userStats.level.currentExp + userStats.level.nextLevel)

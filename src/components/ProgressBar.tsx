@@ -18,22 +18,18 @@ function ProgressBar({
       style={{ position: "relative" }}
     >
       <div
-        className=" "
+        className="rounded-lg"
         style={{
           position: "absolute",
           width: `${clampedProgress * 100}%`,
           minHeight: "1px",
           backgroundColor: "var(--accent-color)",
           background: `linear-gradient(90deg, var(--accent-color) 0%, var(--accent-color-two) 100%)`,
-          color: "transparent",
           userSelect: "none",
           fontSize: size,
-          zIndex: -1,
+          zIndex: 0,
         }}
       >
-        {display ?? ""}
-      </div>
-      <div className="w-full" style={{ fontSize: size }}>
         {display ?? ""}
       </div>
     </div>

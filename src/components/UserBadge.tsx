@@ -15,21 +15,30 @@ function UserBadge() {
         </div>
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
-        <DropdownMenu.Content className=" bg-[var(--bg-tertiary)] z-30">
+        <DropdownMenu.Content className=" bg-[var(--bg-tertiary)] z-30 shadow-lg rounded-md overflow-hidden">
           <div className="flex flex-col w-28 gap-2 ">
-            <DropdownMenu.Item className=" hover:bg-[#fff3] flex ">
+            <DropdownMenu.Item
+              className=" hover:bg-[#fff3] flex border-none"
+              asChild
+            >
               <a href="/challenge/rules" className="fg-color w-full">
                 <div className="p-2">Rules</div>
               </a>
             </DropdownMenu.Item>
             {user && (
-              <DropdownMenu.Item className=" hover:bg-[#fff3] flex ">
+              <DropdownMenu.Item
+                className=" hover:bg-[#fff3] flex border-none"
+                asChild
+              >
                 <a href="/profile" className="fg-color w-full">
                   <div className="p-2">Profile</div>
                 </a>
               </DropdownMenu.Item>
             )}
-            <DropdownMenu.Item className=" hover:bg-[#fff3] flex ">
+            <DropdownMenu.Item
+              className=" hover:bg-[#fff3] flex  border-none"
+              asChild
+            >
               {!user ? (
                 <a href="/sign-in" className="fg-color w-full">
                   <div className="p-2">Sign in</div>
