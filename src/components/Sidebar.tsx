@@ -1,24 +1,16 @@
 import React from "react";
 import UserBadge from "./UserBadge";
-import Countdown from "./Countdown";
-import { useCurrentLeaderboard } from "../hooks/UseLeaderboard";
-
 const Sidebar = ({ children }: React.PropsWithChildren) => {
-  const leaderboard = useCurrentLeaderboard();
   return (
-    <div className="flexCol align-center">
-      <div className="shadow w-full flexRow space-between  bg-secondary flex-center">
-        <div className="f1" />
-        <a className="fg-color" href="/challenge">
-          <h3 className="f1">
-            <span className="hide">BYU CPC</span>{" "}
-            <span className="normal">Summer Challenge 2024</span>
-          </h3>
+    <div className="flex flex-col md:flex-row items-center md:items-start overflow-hidden h-screen w-screen">
+      <div className="w-full flex flex-row bg-secondary md:h-full py-8 px-4 md:min-w-44 md:max-w-64 items-start justify-between">
+        <a className="fg-color flex flex-col" href="/challenge">
+          <span className="">BYU CPC</span>{" "}
+          <span className=" font-normal">Summer Challenge 2024</span>
         </a>
         <UserBadge />
       </div>
-      <Countdown leaderboard={leaderboard} className="w-full space-beneath " />
-      {children}
+      <div className="overflow-hidden flex h-screen w-full">{children}</div>
     </div>
   );
 };

@@ -158,15 +158,16 @@ export function Component() {
   const [signIn, setSignIn] = useState(true);
   return (
     <Sidebar>
-      <div className="flex-center vfull">
-        <div className="flex-col bg-secondary auth shadow">
-          <div className="flexRow flex-center">
+      <div className="flex-center w-full">
+        <div className="flex-col bg-secondary auth ">
+          <div className="flex flex-row flex-center gap-9">
             <button
               className={"sign-in " + (signIn ? "selected" : "")}
               onClick={() => setSignIn(true)}
             >
               Log In
             </button>
+            <span className="opacity-10">|</span>
             <button
               className={"sign-in " + (!signIn ? "selected" : "")}
               onClick={() => setSignIn(false)}

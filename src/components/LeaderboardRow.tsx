@@ -6,6 +6,7 @@ import React from "react";
 import { UserStats } from "../score/score";
 import ProgressBar from "./ProgressBar";
 import { useCurrentLeaderboard, useLeaderboard } from "../hooks/UseLeaderboard";
+import FlameIcon from "./FlameIcon";
 function WeeklyProblemBox({
   solved,
   allProblemsLength,
@@ -15,7 +16,7 @@ function WeeklyProblemBox({
 }) {
   return (
     <div
-      className={`center rounded tiny transparent ${
+      className={`center rounded-md tiny transparent ${
         solved === 2 ? "bg-green" : solved === 1 ? "outline-green" : ""
       }`}
       style={{ width: `${100 / allProblemsLength}%`, userSelect: "none" }}
@@ -47,9 +48,9 @@ export function LeaderboardRow({ userStats, rank, isMe }: LeaderboardRowProps) {
   );
 
   return (
-    <div className="bg-secondary responsive-fg">
-      <div className={"flexCol  rounded " + (isMe ? "highlight" : "")}>
-        <div className="flexRow gap-8">
+    <div className="bg-secondary w-full">
+      <div className={"flex flex-col " + (isMe ? "highlight" : "")}>
+        <div className="flex flex-row gap-2">
           {!!thisWeek?.kattis &&
             thisWeek.kattis.map((problemId: string) => (
               <WeeklyProblemBox
@@ -79,21 +80,21 @@ export function LeaderboardRow({ userStats, rank, isMe }: LeaderboardRowProps) {
               />
             ))}
         </div>
-        <div className="flexVar w-full wrap">
-          <div className="section flexCol">
-            <div className="flexRow">
-              <div className={isMe ? "highlight-text" : ""}>
+        <div className="flex flex-col md:flex-row items-center w-full  flex-wrap">
+          <div className="section flex flex-col">
+            <div className="flex flex-row items-center">
+              <div className={isMe ? " text-" : ""}>
                 {rank}.{" "}
                 <span className="bold">{userStats.user.display_name} </span>
               </div>
               <div
-                className="streak relative flex-center "
+                className=" w-9 h-9 flex relative flex-center "
                 data-tooltip-id={userId + "-streak"}
               >
                 {userStats.streak.currentStreak > 0 && (
                   <div
                     className={
-                      "z1 relative streakText bold pop-shadow " +
+                      "z-10 relative text-xs font-black " +
                       (userStats.streak.isActive ? "fg-white" : "")
                     }
                   >
@@ -101,15 +102,21 @@ export function LeaderboardRow({ userStats, rank, isMe }: LeaderboardRowProps) {
                   </div>
                 )}
                 {userStats.streak.isActive ? (
-                  <Flame className="bgImage full flame" />
+                  <FlameIcon>
+                    <Flame />
+                  </FlameIcon>
                 ) : userStats.streak.currentStreak ? (
-                  <FlameBorder className="bgImage full flame" />
+                  <FlameIcon>
+                    <FlameBorder />
+                  </FlameIcon>
                 ) : (
-                  <DeadFlame className="bgImage full flame" />
+                  <FlameIcon>
+                    <DeadFlame />
+                  </FlameIcon>
                 )}
               </div>
             </div>
-            <div className="flexRow gap-12">
+            <div className="flex flex-row gap-3">
               <div data-tooltip-id={userId + "-exp"}>
                 <span className="small">Lv.</span>{" "}
                 <span className="bold">{userStats.level.level}</span>
@@ -120,16 +127,16 @@ export function LeaderboardRow({ userStats, rank, isMe }: LeaderboardRowProps) {
               </div>
             </div>
           </div>
-          <div className="flexRow gap-12 wrap section">
+          <div className="flex flex-row gap-3 flex-wrap section">
             <div>{userStats.exp.size} days</div>
             <div>{userStats.contests.size} contests</div>
             <div>{userStats.problemCount} problems</div>
           </div>
-          <div className="flexRow  gap-12 section">
+          <div className="flex flex-row  gap-3 section">
             <div>Avg. Diff.</div>
             {!!userStats.avgDifficulty["kattis"] && (
               <div
-                className="flexRow   gap-12"
+                className="flex flex-row gap-3"
                 data-tooltip-id={userId + "-kattis"}
               >
                 <div>Kattis</div>
@@ -138,7 +145,7 @@ export function LeaderboardRow({ userStats, rank, isMe }: LeaderboardRowProps) {
             )}
             {!!userStats.avgDifficulty["codeforces"] && (
               <div
-                className="flexRow  gap-12"
+                className="flex flex-row gap-3"
                 data-tooltip-id={userId + "-codeforces"}
               >
                 <div>Codeforces</div>
