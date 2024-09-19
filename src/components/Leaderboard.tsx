@@ -155,6 +155,7 @@ export function Leaderboard() {
         .filter(
           (u) =>
             !hasAffiliation ||
+            u.user?.id === user?.uid ||
             !!(
               u.user.affiliation &&
               leaderboard
@@ -169,15 +170,6 @@ export function Leaderboard() {
             userStats={u}
             rank={i + 1}
             isMe={u.user?.id === user?.uid}
-            isAffiliated={
-              !hasAffiliation ||
-              !!(
-                u.user.affiliation &&
-                leaderboard
-                  .toLowerCase()
-                  .startsWith(u.user.affiliation.toLowerCase())
-              )
-            }
           />
         ))}
     </div>
