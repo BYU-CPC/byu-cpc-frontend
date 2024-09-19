@@ -22,7 +22,7 @@ export default function LeaderboardSelector() {
       key={key}
       setLeaderboard={(leaderboard) => setLeaderboard({ leaderboard })}
       isSelected={key === leaderboard}
-      isDynamic={data.dynamic.hasOwnProperty(key)}
+      isDynamic={!!data.dynamic?.hasOwnProperty(key)}
       name={board.name ?? key}
     />
   ));

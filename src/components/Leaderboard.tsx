@@ -53,6 +53,7 @@ export function Leaderboard() {
   const { data: allProblems } = useProblems();
   const { data: leaderboardIndex } = useLeaderboardIndex();
   const leaderboardData = leaderboardIndex?.combined?.[leaderboard];
+  const hasAffiliation = !!leaderboardIndex?.dynamic?.[leaderboard];
   useEffect(() => {
     document.title = leaderboardData?.name ?? "Leaderboard";
   }, [leaderboardData?.name]);
@@ -151,6 +152,16 @@ export function Leaderboard() {
       )}
       {calculatedUsers
         .filter((a) => !!a.score || a.user.id === user?.uid)
+        .filter(
+          (u) =>
+            !hasAffiliation ||
+            !!(
+              u.user.affiliation &&
+              leaderboard
+                .toLowerCase()
+                .startsWith(u.user.affiliation.toLowerCase())
+            )
+        )
         .sort((a, b) => b.score - a.score)
         .map((u, i) => (
           <LeaderboardRow
@@ -158,6 +169,15 @@ export function Leaderboard() {
             userStats={u}
             rank={i + 1}
             isMe={u.user?.id === user?.uid}
+            isAffiliated={
+              !hasAffiliation ||
+              !!(
+                u.user.affiliation &&
+                leaderboard
+                  .toLowerCase()
+                  .startsWith(u.user.affiliation.toLowerCase())
+              )
+            }
           />
         ))}
     </div>
