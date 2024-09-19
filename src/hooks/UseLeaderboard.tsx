@@ -77,7 +77,7 @@ export const useLeaderboardIndex = () => {
     : undefined;
   const data = {
     combined: { ...(transformedData ?? {}), ...staticLeaderboard },
-    dynamic: transformedData ?? {},
+    dynamic: transformedData,
     static: staticLeaderboard,
   };
   return {

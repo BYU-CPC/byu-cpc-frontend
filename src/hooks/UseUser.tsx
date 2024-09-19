@@ -7,6 +7,7 @@ export type User = {
   display_name: string;
   id: string;
   kattis_submissions: Record<string, number>;
+  affiliation?: string;
   codeforces_submissions:
     | (Record<
         string,
