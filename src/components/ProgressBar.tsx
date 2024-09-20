@@ -18,7 +18,7 @@ function ProgressBar({
       style={{ position: "relative" }}
     >
       <div
-        className="rounded-lg"
+        className="rounded-lg text-nowrap"
         style={{
           position: "absolute",
           width: `${clampedProgress * 100}%`,
