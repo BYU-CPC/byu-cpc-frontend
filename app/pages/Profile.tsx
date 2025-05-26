@@ -20,7 +20,7 @@ async function isPlatformUsernameValid(username: string, platform: string) {
 }
 
 function PlatformUsernameSelector({ platform }: { platform: string }) {
-  const profile = useUserProfile();
+  const { data: profile } = useUserProfile();
   const user = useUser();
   const platformDisplay = platform[0].toUpperCase() + platform.slice(1);
   const [savedInput, setSavedInput] = useState(false);
@@ -89,8 +89,8 @@ function PlatformUsernameSelector({ platform }: { platform: string }) {
   );
 }
 
-export function Component() {
-  const profile = useUserProfile();
+export default function Component() {
+  const { data: profile } = useUserProfile();
   return (
     <Sidebar title="Profile settings">
       {profile ? (
@@ -107,5 +107,3 @@ export function Component() {
     </Sidebar>
   );
 }
-
-Component.displayName = "Profile";

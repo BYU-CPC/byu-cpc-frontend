@@ -8,7 +8,6 @@ import { useQueries } from "@tanstack/react-query";
 import { getStats } from "../score/score";
 import {
   staticLeaderboardDisplayNames,
-  useCurrentLeaderboard,
   useLeaderboard,
   useLeaderboardIndex,
 } from "../hooks/UseLeaderboard";
@@ -23,10 +22,9 @@ function formatCodeforcesId(input: string) {
   }
 }
 
-export function Leaderboard() {
+export function Leaderboard({ leaderboard }: { leaderboard: string }) {
   const user = useUser();
   const users = useUsers();
-  const [leaderboard] = useCurrentLeaderboard();
 
   const { data } = useLeaderboard(leaderboard);
   const thisWeek = data && "thisWeek" in data ? data.thisWeek : undefined;
@@ -167,6 +165,7 @@ export function Leaderboard() {
         .sort((a, b) => b.score - a.score)
         .map((u, i) => (
           <LeaderboardRow
+            leaderboard={leaderboard}
             key={u.user.id}
             userStats={u}
             rank={i + 1}

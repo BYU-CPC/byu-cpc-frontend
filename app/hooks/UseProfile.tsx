@@ -36,14 +36,14 @@ export function useUserProfile() {
         .post<Profile>(`${BACKEND_URL}/get_profile`, {
           id_token: await user?.getIdToken(),
         })
-        .catch((e) => ({ data: null }))
+        .catch(() => ({ data: null }))
     ).data;
   };
-  const query = useQuery({
+
+  return useQuery({
     queryKey: ["profile", user?.uid],
     queryFn: getProfile,
     refetchOnWindowFocus: true,
     enabled: !!user,
   });
-  return query?.data;
 }

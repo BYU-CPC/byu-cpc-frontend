@@ -2,7 +2,6 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { BACKEND_URL } from "./base";
 import { Platform, platformValues } from "../types/platform";
-import { useSearchParams } from "react-router-dom";
 const staticLeaderboardValues = [
   "week",
   "three_months",
@@ -143,11 +142,6 @@ export const useLeaderboard = (id: string, invitationId?: string) => {
     ...query,
     data: { allProblems, practiceSets, thisWeek },
   };
-};
-
-export const useCurrentLeaderboard = () => {
-  const [params, setParams] = useSearchParams();
-  return [params.get("leaderboard") ?? "week", setParams] as const;
 };
 
 type CreateLeaderboardResponse = { id: string };

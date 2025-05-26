@@ -1,6 +1,6 @@
 import React from "react";
 import { Sidebar } from "../components/Sidebar";
-export function Component() {
+export default function Component() {
   return (
     <Sidebar title="Rules">
       <div className="overflow-y-auto p-6">
@@ -138,5 +138,3 @@ export function Component() {
     </Sidebar>
   );
 }
-
-Component.displayName = "Rules";

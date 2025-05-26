@@ -154,7 +154,7 @@ function SignUp() {
   );
 }
 
-export function Component() {
+export default function Component() {
   const [signIn, setSignIn] = useState(true);
   return (
     <Sidebar title={signIn ? "Log In" : "Sign Up"}>
@@ -181,5 +181,3 @@ export function Component() {
     </Sidebar>
   );
 }
-
-Component.displayName = "SignIn";

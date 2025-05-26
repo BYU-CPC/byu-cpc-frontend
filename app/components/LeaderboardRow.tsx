@@ -5,7 +5,7 @@ import DeadFlame from "../icons/DeadFlame";
 import React from "react";
 import { UserStats } from "../score/score";
 import ProgressBar from "./ProgressBar";
-import { useCurrentLeaderboard, useLeaderboard } from "../hooks/UseLeaderboard";
+import { useLeaderboard } from "../hooks/UseLeaderboard";
 import FlameIcon from "./FlameIcon";
 function WeeklyProblemBox({
   solved,
@@ -33,11 +33,16 @@ type LeaderboardRowProps = {
   userStats: UserStats;
   rank: number;
   isMe: boolean;
+  leaderboard: string;
 };
 
-export function LeaderboardRow({ userStats, rank, isMe }: LeaderboardRowProps) {
+export function LeaderboardRow({
+  userStats,
+  rank,
+  isMe,
+  leaderboard,
+}: LeaderboardRowProps) {
   const userId = userStats.user.id;
-  const [leaderboard] = useCurrentLeaderboard();
   const { data } = useLeaderboard(leaderboard);
   const thisWeek = data && "thisWeek" in data ? data.thisWeek : undefined;
   const allProblemsLength =
