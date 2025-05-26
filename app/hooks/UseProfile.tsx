@@ -21,12 +21,19 @@ export default function useUser() {
   return user;
 }
 
+type Profile = {
+  usernames: {
+    [key: string]: string;
+  };
+  display_name: string;
+};
+
 export function useUserProfile() {
   const user = useUser();
   const getProfile = async () => {
     return (
       await axios
-        .post(`${BACKEND_URL}/get_profile`, {
+        .post<Profile>(`${BACKEND_URL}/get_profile`, {
           id_token: await user?.getIdToken(),
         })
         .catch((e) => ({ data: null }))

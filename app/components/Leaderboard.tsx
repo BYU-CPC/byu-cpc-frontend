@@ -79,7 +79,8 @@ export function Leaderboard() {
     }
   }
   return (
-    <div className="gap-6 flex flex-col w-full items-center overflow-y-scroll pt-6 px-6 md:pt-0">
+    <div className="gap-6 flex flex-col w-full items-center overflow-y-scroll p-6 md:pt-0">
+      <div className="mt--6 md:mt-6"></div>
       {!Object.keys(staticLeaderboardDisplayNames).includes(leaderboard) && (
         <Countdown
           className="w-full  bg-secondary z-[-1] rounded-lg"

@@ -21,7 +21,7 @@ function LogIn() {
   const logIn = (email: string, password: string) =>
     signInWithEmailAndPassword(auth, email, password)
       .then(() => {
-        navigate("/challenge");
+        navigate("/leaderboard");
       })
       .catch((error) => {
         setError(error.message);
@@ -79,7 +79,7 @@ function SignUp() {
           kattis_username: kattisUsername,
           codeforces_username: codeforcesUsername,
         });
-        navigate("/challenge");
+        navigate("/leaderboard");
       })
       .catch((error) => {
         setError(error.message);
@@ -157,7 +157,7 @@ function SignUp() {
 export function Component() {
   const [signIn, setSignIn] = useState(true);
   return (
-    <Sidebar>
+    <Sidebar title={signIn ? "Log In" : "Sign Up"}>
       <div className="flex-center w-full">
         <div className="flex-col bg-secondary auth ">
           <div className="flex flex-row flex-center gap-9">

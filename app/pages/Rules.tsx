@@ -2,7 +2,7 @@ import React from "react";
 import { Sidebar } from "../components/Sidebar";
 export function Component() {
   return (
-    <Sidebar>
+    <Sidebar title="Rules">
       <div className="overflow-y-auto p-6">
         <div className="responsive-fg bg-secondary p-2">
           <p className="large bold">Contest</p>
@@ -75,7 +75,7 @@ export function Component() {
             Currently, the leaderboard only supports Kattis. To earn points from
             Kattis, you need to <a href="/sign-in">sign in</a> to this website
             and install{" "}
-            <a href="/challenge/extension">this browser extension.</a> After
+            <a href="/leaderboard/extension">this browser extension.</a> After
             that, you should be ready to start solving problems!
           </p>
           <p>
@@ -110,10 +110,8 @@ export function Component() {
             <ul>
               <li>
                 Using other peoples' implementations for general algorithms/data
-                structure &mdash;{" "}
-                <a href="https://www.youtube.com/watch?v=RDzsrmMl48I">
-                  Using book code without understanding completely it is okay
-                </a>
+                structure &mdash; Using book code without completely
+                understanding it is okay
               </li>
               <li>
                 Discussing problems with others to understand their solutions
@@ -122,7 +120,7 @@ export function Component() {
                 Using LLMs as an assistant to get you pointed in the right
                 direction
               </li>
-              <li>Reading the Codeforces tutorials</li>
+              <li>Reading Codeforces tutorials</li>
               <li>Finding hints online to solve problems</li>
             </ul>
             To help discourage cheating, anyone who wins a prize may be asked to

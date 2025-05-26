@@ -2,7 +2,7 @@ import React from "react";
 import { Sidebar } from "../components/Sidebar";
 export function Component() {
   return (
-    <Sidebar>
+    <Sidebar title="Kattis Tracker Extension">
       <div className="responsive-fg bg-secondary p-2">
         <p className="large bold">Chrome</p>
         <p>

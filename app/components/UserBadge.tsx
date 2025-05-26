@@ -21,7 +21,7 @@ function UserBadge() {
               className=" hover:bg-[#fff3] flex border-none"
               asChild
             >
-              <a href="/challenge/rules" className="fg-color w-full">
+              <a href="/rules" className="fg-color w-full">
                 <div className="p-2">Rules</div>
               </a>
             </DropdownMenu.Item>

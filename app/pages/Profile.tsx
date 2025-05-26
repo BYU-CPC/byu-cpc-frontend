@@ -12,8 +12,9 @@ async function isPlatformUsernameValid(username: string, platform: string) {
   if (!username) {
     return true;
   }
-  const response = await axios.post(`${BACKEND_URL}/${platform}/validate`, {
+  const response = await axios.post(`${BACKEND_URL}/validate_username`, {
     username,
+    platform,
   });
   return response.data.valid;
 }
@@ -26,7 +27,7 @@ function PlatformUsernameSelector({ platform }: { platform: string }) {
   const [usernameInput, setUsernameInput] = useState("");
   useEffect(() => {
     if (profile) {
-      setUsernameInput(profile[platform + "_username"]);
+      setUsernameInput(profile.usernames[platform] ?? "");
     }
   }, [profile, platform]);
   const [usernameInputDebounce] = useDebounce(usernameInput, 2000);
@@ -41,13 +42,14 @@ function PlatformUsernameSelector({ platform }: { platform: string }) {
   }, [usernameInputDebounce, platform]);
   const { mutateAsync, isPending } = useMutation({
     mutationFn: async () => {
-      await axios.post(`${BACKEND_URL}/set_${platform}_username`, {
+      await axios.post(`${BACKEND_URL}/set_username`, {
         id_token: await user?.getIdToken(),
         username: usernameInput,
+        platform,
       });
       setSavedInput(true);
     },
-    mutationKey: ["set_kattis_username"],
+    mutationKey: ["set_username"],
   });
   const handleKattisSubmit = (event: FormEvent) => {
     event.preventDefault();
@@ -72,7 +74,7 @@ function PlatformUsernameSelector({ platform }: { platform: string }) {
             usernameError ||
             isPending ||
             savedInput ||
-            usernameInput === profile[`${platform}_username`]
+            usernameInput === profile?.usernames[platform]
           }
         >
           Save
@@ -90,7 +92,7 @@ function PlatformUsernameSelector({ platform }: { platform: string }) {
 export function Component() {
   const profile = useUserProfile();
   return (
-    <Sidebar>
+    <Sidebar title="Profile settings">
       {profile ? (
         <div className="flex w-full p-6">
           <div className="flex flex-col gap-4 bg-secondary p-6 w-full">

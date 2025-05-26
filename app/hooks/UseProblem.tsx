@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { BACKEND_URL } from "./base";
 import { Platform } from "../types/platform";
-type Problem = { [key: string]: { rating: number; name: string } };
+type Problem = { [key: string]: { rating?: number; name?: string } };
 export type AllProblems = Record<Platform, Problem>;
 
 async function getAllProblems(): Promise<AllProblems> {
