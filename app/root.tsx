@@ -18,6 +18,7 @@ import {
   type AsyncStorage,
   type PersistedQuery,
 } from "@tanstack/react-query-persist-client";
+import "./output.css";
 function createIdbStorage(): AsyncStorage<PersistedQuery> {
   return {
     getItem: async (key) => await get(key),
