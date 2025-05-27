@@ -19,6 +19,8 @@ import {
   type PersistedQuery,
 } from "@tanstack/react-query-persist-client";
 import "./index.css";
+import { useUser } from "./hooks/UseProfile";
+import { UserContext } from "./components/UserContext";
 function createIdbStorage(): AsyncStorage<PersistedQuery> {
   return {
     getItem: async (key) => await get(key),
@@ -79,11 +81,14 @@ export function Layout({ children }: { children: React.ReactNode }) {
 }
 
 export default function App() {
+  const { user, token } = useUser();
   return (
     <StrictMode>
-      <QueryClientProvider client={queryClient}>
-        <Outlet />
-      </QueryClientProvider>
+      <UserContext.Provider value={{ user, token }}>
+        <QueryClientProvider client={queryClient}>
+          <Outlet />
+        </QueryClientProvider>
+      </UserContext.Provider>
     </StrictMode>
   );
 }

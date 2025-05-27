@@ -1,12 +1,12 @@
-import React, { FormEvent } from "react";
+import React, { FormEvent, useContext } from "react";
 import { useEffect, useState } from "react";
 import { Sidebar } from "../components/Sidebar";
 import { useUserProfile } from "../hooks/UseProfile";
-import useUser from "../hooks/UseProfile";
 import { useDebounce } from "use-debounce";
 import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
 import { BACKEND_URL } from "../hooks/base";
+import { UserContext } from "~/components/UserContext";
 
 async function isPlatformUsernameValid(username: string, platform: string) {
   if (!username) {
@@ -21,7 +21,7 @@ async function isPlatformUsernameValid(username: string, platform: string) {
 
 function PlatformUsernameSelector({ platform }: { platform: string }) {
   const { data: profile } = useUserProfile();
-  const user = useUser();
+  const { token } = useContext(UserContext);
   const platformDisplay = platform[0].toUpperCase() + platform.slice(1);
   const [savedInput, setSavedInput] = useState(false);
   const [usernameInput, setUsernameInput] = useState("");
@@ -42,11 +42,16 @@ function PlatformUsernameSelector({ platform }: { platform: string }) {
   }, [usernameInputDebounce, platform]);
   const { mutateAsync, isPending } = useMutation({
     mutationFn: async () => {
-      await axios.post(`${BACKEND_URL}/set_username`, {
-        id_token: await user?.getIdToken(),
-        username: usernameInput,
-        platform,
-      });
+      await axios.post(
+        `${BACKEND_URL}/set_username`,
+        {
+          username: usernameInput,
+          platform,
+        },
+        {
+          headers: { Authorization: token },
+        }
+      );
       setSavedInput(true);
     },
     mutationKey: ["set_username"],

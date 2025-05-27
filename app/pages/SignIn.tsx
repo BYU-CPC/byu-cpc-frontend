@@ -73,12 +73,15 @@ function SignUp() {
     createUserWithEmailAndPassword(getAuth(), email, password)
       .then(async (userCredential) => {
         const user = userCredential.user;
-        await axios.post(`${BACKEND_URL}/create_user`, {
-          id_token: await user.getIdToken(),
-          display_name: displayName,
-          kattis_username: kattisUsername,
-          codeforces_username: codeforcesUsername,
-        });
+        await axios.post(
+          `${BACKEND_URL}/create_user`,
+          {
+            display_name: displayName,
+            kattis_username: kattisUsername,
+            codeforces_username: codeforcesUsername,
+          },
+          { headers: { Authorization: await user?.getIdToken() } }
+        );
         navigate("/leaderboard");
       })
       .catch((error) => {

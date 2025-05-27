@@ -1,5 +1,4 @@
-import React, { useEffect } from "react";
-import useUser from "../hooks/UseProfile";
+import React, { useContext, useEffect } from "react";
 import "./Leaderboard.css";
 import { useUsers } from "../hooks/UseUser";
 import { LeaderboardRow } from "./LeaderboardRow";
@@ -12,6 +11,7 @@ import {
   useLeaderboardIndex,
 } from "../hooks/UseLeaderboard";
 import Countdown from "./Countdown";
+import { UserContext } from "./UserContext";
 
 function formatCodeforcesId(input: string) {
   const match = input.match(/^(\d+)(\D.*)$/);
@@ -23,7 +23,7 @@ function formatCodeforcesId(input: string) {
 }
 
 export function Leaderboard({ leaderboard }: { leaderboard: string }) {
-  const user = useUser();
+  const { user } = useContext(UserContext);
   const users = useUsers();
 
   const { data } = useLeaderboard(leaderboard);
@@ -51,21 +51,22 @@ export function Leaderboard({ leaderboard }: { leaderboard: string }) {
   const { data: allProblems } = useProblems();
   const { data: leaderboardIndex } = useLeaderboardIndex();
   const leaderboardData = leaderboardIndex?.combined?.[leaderboard];
-  const hasAffiliation = !!leaderboardIndex?.dynamic?.[leaderboard];
   useEffect(() => {
     document.title = leaderboardData?.name ?? "Leaderboard";
   }, [leaderboardData?.name]);
 
   const calculatedUsers = useQueries({
-    queries: users.map((user) => ({
-      queryKey: [leaderboard, "score", user.id],
-      queryFn: async () => {
-        return allProblems && leaderboardData
-          ? getStats(user, allProblems, leaderboardData, allStudyProblems)
-          : undefined;
-      },
-      enabled: !!allProblems && !!leaderboardData,
-    })),
+    queries: users
+      .filter((u) => data?.members.includes(u.id))
+      .map((user) => ({
+        queryKey: [leaderboard, "score", user.id],
+        queryFn: async () => {
+          return allProblems && leaderboardData
+            ? getStats(user, allProblems, leaderboardData, allStudyProblems)
+            : undefined;
+        },
+        enabled: !!allProblems && !!leaderboardData,
+      })),
     combine: (results) => results.map((r) => r.data).filter((a) => !!a),
   });
   for (const user of calculatedUsers) {
@@ -77,8 +78,7 @@ export function Leaderboard({ leaderboard }: { leaderboard: string }) {
     }
   }
   return (
-    <div className="gap-6 flex flex-col w-full items-center overflow-y-scroll p-6 md:pt-0">
-      <div className="mt--6 md:mt-6"></div>
+    <div className="gap-6 flex flex-col w-full items-center overflow-y-scroll p-6">
       {!Object.keys(staticLeaderboardDisplayNames).includes(leaderboard) && (
         <Countdown
           className="w-full  bg-secondary z-[-1] rounded-lg"
@@ -151,17 +151,6 @@ export function Leaderboard({ leaderboard }: { leaderboard: string }) {
       )}
       {calculatedUsers
         .filter((a) => !!a.score || a.user.id === user?.uid)
-        .filter(
-          (u) =>
-            !hasAffiliation ||
-            u.user?.id === user?.uid ||
-            !!(
-              u.user.affiliation &&
-              leaderboard
-                .toLowerCase()
-                .startsWith(u.user.affiliation.toLowerCase())
-            )
-        )
         .sort((a, b) => b.score - a.score)
         .map((u, i) => (
           <LeaderboardRow

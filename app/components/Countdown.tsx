@@ -23,23 +23,27 @@ function Countdown({
   leaderboard,
   className,
   fontSize,
+  hideDisplay = false,
 }: {
   leaderboard: string;
   className?: string;
   fontSize?: string;
+  hideDisplay?: boolean;
 }) {
   const { data } = useLeaderboardIndex();
   const board = data.combined?.[leaderboard];
   const currentTime = useDebounce(new Date(), 500)[0];
   if (!board) return null;
-  const timeDisplay = formatTime(board.end.getTime() - currentTime.getTime());
+  const timeDisplay = formatTime(
+    board.finish.getTime() - currentTime.getTime()
+  );
   const progress =
     (currentTime.getTime() - (board.start.getTime() ?? 0)) /
-    ((board.end.getTime() ?? 1) - (board.start.getTime() ?? 0));
+    ((board.finish.getTime() ?? 1) - (board.start.getTime() ?? 0));
   return (
     <ProgressBar
       progress={progress}
-      display={timeDisplay}
+      display={hideDisplay ? undefined : timeDisplay}
       className={className}
       fontSize={fontSize}
     />

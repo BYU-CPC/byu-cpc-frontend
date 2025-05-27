@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import firebase from "firebase/compat/app";
-import useUser from "../hooks/UseProfile";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import Gear from "../icons/Gear";
+import { UserContext } from "./UserContext";
 
 function UserBadge() {
-  const user = useUser();
+  const { user } = useContext(UserContext);
 
   return (
     <DropdownMenu.Root>
@@ -16,7 +16,7 @@ function UserBadge() {
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
         <DropdownMenu.Content className=" bg-[var(--bg-tertiary)] z-30 shadow-lg rounded-md overflow-hidden">
-          <div className="flex flex-col w-28 gap-2 ">
+          <div className="flex flex-col gap-2 ">
             <DropdownMenu.Item
               className=" hover:bg-[#fff3] flex border-none"
               asChild
@@ -32,6 +32,16 @@ function UserBadge() {
               >
                 <a href="/profile" className="fg-color w-full">
                   <div className="p-2">Profile</div>
+                </a>
+              </DropdownMenu.Item>
+            )}
+            {user && (
+              <DropdownMenu.Item
+                className=" hover:bg-[#fff3] flex border-none"
+                asChild
+              >
+                <a href="leaderboard/edit" className="fg-color w-full">
+                  <div className="p-2">My leaderboards</div>
                 </a>
               </DropdownMenu.Item>
             )}

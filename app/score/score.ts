@@ -123,7 +123,7 @@ export function getStats(
       if (
         problemId === "contests" ||
         submission.time < leaderboard.start.getTime() / 1000 ||
-        submission.time > leaderboard.end.getTime() / 1000
+        submission.time > leaderboard.finish.getTime() / 1000
       ) {
         continue;
       }

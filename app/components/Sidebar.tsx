@@ -26,7 +26,7 @@ const Sidebar = ({
           </a>
           <UserBadge />
         </div>
-        {isChallenge && <LeaderboardSelector />}
+        {isChallenge && <LeaderboardSelector leaderboard={leaderboard} />}
       </div>
       <div className="overflow-hidden flex h-screen w-full">{children}</div>
     </div>
