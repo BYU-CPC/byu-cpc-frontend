@@ -16,7 +16,7 @@ function UserBadge() {
         </div>
       </DropdownMenu.Trigger>
       <DropdownMenu.Portal>
-        <DropdownMenu.Content className=" bg-[var(--bg-tertiary)] z-30 shadow-lg rounded-md overflow-hidden">
+        <DropdownMenu.Content className=" bg-[var(--bg-tertiary)] z-30 shadow-lg rounded-md overflow-hidden min-w-56">
           <div className="flex flex-col gap-2 ">
             <DropdownMenu.Item
               className=" hover:bg-[#fff3] flex border-none"
@@ -46,6 +46,14 @@ function UserBadge() {
                 </Link>
               </DropdownMenu.Item>
             )}
+            <DropdownMenu.Item
+              className=" hover:bg-[#fff3] flex border-none"
+              asChild
+            >
+              <Link to="/extension" className="fg-color w-full">
+                <div className="p-2">Extension</div>
+              </Link>
+            </DropdownMenu.Item>
             <DropdownMenu.Item
               className=" hover:bg-[#fff3] flex  border-none"
               asChild
