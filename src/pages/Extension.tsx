@@ -1,6 +1,6 @@
 import React from "react";
 import { Sidebar } from "../components/Sidebar";
-export function Component() {
+export default function Extension() {
   return (
     <Sidebar title="Kattis Tracker Extension">
       <div className="responsive-fg bg-secondary p-2">
@@ -51,5 +51,3 @@ export function Component() {
     </Sidebar>
   );
 }
-
-Component.displayName = "Extension";

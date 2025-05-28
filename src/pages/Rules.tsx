@@ -1,6 +1,7 @@
 import React from "react";
 import { Sidebar } from "../components/Sidebar";
-export default function Component() {
+import { Link } from "@tanstack/react-router";
+export default function Rules() {
   return (
     <Sidebar title="Rules">
       <div className="overflow-y-auto p-6">
@@ -73,10 +74,10 @@ export default function Component() {
           <p className="large bold">Platforms</p>
           <p>
             Currently, the leaderboard only supports Kattis. To earn points from
-            Kattis, you need to <a href="/sign-in">sign in</a> to this website
-            and install{" "}
-            <a href="/leaderboard/extension">this browser extension.</a> After
-            that, you should be ready to start solving problems!
+            Kattis, you need to <Link to="/sign-in">sign in</Link> to this
+            website and install{" "}
+            <Link to="/extension">this browser extension.</Link> After that, you
+            should be ready to start solving problems!
           </p>
           <p>
             We will add support for Codeforces within two weeks of the challenge

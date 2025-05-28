@@ -4,14 +4,15 @@ import { useState } from "react";
 import { Sidebar } from "../../components/Sidebar.js";
 import { useUserProfile } from "../../hooks/UseProfile.js";
 import firebase from "firebase/compat/app";
-import { redirect } from "react-router";
 import {
   useLeaderboardUpsert,
   useMyLeaderboards,
 } from "~/hooks/UseLeaderboard.js";
 
-import { Input, Checkbox, NumberInput } from "../../components/Input";
+import { Input, Checkbox, NumberInput } from "../../components/Input.js";
 import { FRONTEND_URL } from "~/hooks/base.js";
+import { Link, redirect } from "@tanstack/react-router";
+import { signInPage } from "~/routes/index.js";
 const Separator = () => {
   return <div className="w-full h-px bg-gray-300 my-4" />;
 };
@@ -249,9 +250,13 @@ const LeaderboardRow = ({
     <Collapsible.Root open={open} onOpenChange={(o) => setOpen(o)}>
       <div className="flex flex-col w-full gap-6">
         <div className="flex flex-row items-center gap-16">
-          <a href={`/leaderboard/${info.id}`} key={info.id}>
+          <Link
+            to="/leaderboard/$leaderboardId"
+            params={{ leaderboardId: info.id }}
+            key={info.id}
+          >
             <h2 className="text-lg font-bold">{info.name}</h2>
-          </a>
+          </Link>
           <Collapsible.Trigger className="rounded text-xs">
             Edit
           </Collapsible.Trigger>
@@ -284,10 +289,10 @@ const LeaderboardRow = ({
   );
 };
 
-export default function Component() {
+export default function Edit() {
   const { data: leaderboards = [] } = useMyLeaderboards();
   const user = firebase.auth().currentUser;
-  if (!user) redirect("/sign-in");
+  if (!user) redirect(signInPage);
   const { data: profile, isLoading, isError } = useUserProfile();
   if (isLoading || !profile) return <div>Loading...</div>;
   if (isError) return <div>Error loading profile</div>;

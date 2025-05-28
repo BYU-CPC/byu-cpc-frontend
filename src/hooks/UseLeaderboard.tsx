@@ -3,7 +3,7 @@ import axios from "axios";
 import { BACKEND_URL } from "./base";
 import { Platform, platformValues } from "../types/platform";
 import { useContext, useEffect } from "react";
-import { UserContext } from "~/components/UserContext";
+import { UserContext } from "src/components/UserContext";
 const staticLeaderboardValues = ["week", "all"] as const;
 
 type StaticLearderboard = (typeof staticLeaderboardValues)[number];

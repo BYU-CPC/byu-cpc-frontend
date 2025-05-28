@@ -1,7 +1,8 @@
+import { Link } from "@tanstack/react-router";
 import React from "react";
-import Countdown from "~/components/Countdown";
-import { Sidebar } from "~/components/Sidebar";
-import { useLeaderboardIndex } from "~/hooks/UseLeaderboard";
+import Countdown from "src/components/Countdown";
+import { Sidebar } from "src/components/Sidebar";
+import { useLeaderboardIndex } from "src/hooks/UseLeaderboard";
 type LeaderboardRow = ReturnType<
   typeof useLeaderboardIndex
 >["data"]["combined"][string];
@@ -16,12 +17,13 @@ const LeaderboardRow = ({
   return (
     <div className="flex flex-col w-full bg-secondary p-4 rounded">
       <div className="flex flex-row items-center justify-between">
-        <a
-          href={`/leaderboard/${leaderboard.id}`}
+        <Link
+          to="/leaderboard/$leaderboardId"
+          params={{ leaderboardId: leaderboard.id }}
           className="text-lg font-semibold"
         >
           {leaderboard.name}
-        </a>
+        </Link>
         {!isStatic && (
           <div className="flex flex-row text-sm gap-2">
             {leaderboard.start && (

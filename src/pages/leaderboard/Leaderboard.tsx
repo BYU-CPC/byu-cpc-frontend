@@ -1,12 +1,12 @@
 import React from "react";
-import { useParams } from "react-router-dom";
 import { Leaderboard } from "../../components/Leaderboard.js";
 import { Sidebar } from "../../components/Sidebar.js";
-export default function Component() {
-  const { leaderboardId } = useParams<{ leaderboardId?: string }>();
+import { leaderboardPage } from "~/routes/index.js";
+export default function LeaderboardPage() {
+  const { leaderboardId } = leaderboardPage.useParams();
   return (
     <Sidebar title="CP Leaderboard" leaderboard={leaderboardId}>
-      <Leaderboard leaderboard={leaderboardId ?? ""} />
+      <Leaderboard leaderboard={leaderboardId} />
     </Sidebar>
   );
 }

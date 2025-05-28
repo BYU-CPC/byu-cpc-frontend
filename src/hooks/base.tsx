@@ -1,6 +1,8 @@
 import { set } from "idb-keyval";
 import { type QueryClient } from "@tanstack/react-query";
-import { BUSTER, environment } from "~/root";
+import { BUSTER } from "../main";
+// @ts-ignore
+const environment = import.meta.env.DEV ? "development" : "production";
 export const BACKEND_URL =
   environment === "development"
     ? "http://localhost:5000"

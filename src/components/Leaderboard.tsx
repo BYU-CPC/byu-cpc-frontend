@@ -13,7 +13,8 @@ import {
 } from "../hooks/UseLeaderboard";
 import Countdown from "./Countdown";
 import { UserContext } from "./UserContext";
-import { useSearchParams } from "react-router";
+import { Link, useSearch } from "@tanstack/react-router";
+import { leaderboardPage } from "~/routes";
 
 function formatCodeforcesId(input: string) {
   const match = input.match(/^(\d+)(\D.*)$/);
@@ -27,14 +28,15 @@ function formatCodeforcesId(input: string) {
 export function Leaderboard({ leaderboard }: { leaderboard: string }) {
   const { user } = useContext(UserContext);
   const users = useUsers();
-  const [searchParams] = useSearchParams();
-  const invitationId = searchParams.get("invitationId");
+  const { invitationId } = useSearch({
+    from: leaderboardPage.fullPath,
+  });
   const { mutateAsync, isPending } = useLeaderboardJoin(
     leaderboard,
-    invitationId ?? undefined
+    invitationId
   );
 
-  const { data } = useLeaderboard(leaderboard, invitationId ?? undefined);
+  const { data } = useLeaderboard(leaderboard, invitationId);
   const thisWeek = data && "thisWeek" in data ? data.thisWeek : undefined;
   const allStudyProblems =
     data && "allProblems" in data ? data.allProblems : undefined;
@@ -113,9 +115,9 @@ export function Leaderboard({ leaderboard }: { leaderboard: string }) {
               {Object.keys(links)
                 .sort()
                 .map((key) => (
-                  <a key={key} href={links[key]}>
+                  <Link key={key} to={links[key]}>
                     {key}
-                  </a>
+                  </Link>
                 ))}
             </div>
           </div>

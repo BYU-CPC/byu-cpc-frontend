@@ -6,7 +6,7 @@ import { useDebounce } from "use-debounce";
 import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
 import { BACKEND_URL } from "../hooks/base";
-import { UserContext } from "~/components/UserContext";
+import { UserContext } from "src/components/UserContext";
 
 async function isPlatformUsernameValid(username: string, platform: string) {
   if (!username) {
@@ -94,7 +94,7 @@ function PlatformUsernameSelector({ platform }: { platform: string }) {
   );
 }
 
-export default function Component() {
+export default function Profile() {
   const { data: profile } = useUserProfile();
   return (
     <Sidebar title="Profile settings">

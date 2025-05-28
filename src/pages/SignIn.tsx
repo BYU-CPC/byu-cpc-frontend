@@ -1,7 +1,6 @@
 import React, { FormEvent } from "react";
 import { useState } from "react";
 import { Sidebar } from "../components/Sidebar";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./SignIn.css";
 import "firebaseui/dist/firebaseui.css";
@@ -13,6 +12,8 @@ import {
   browserLocalPersistence,
 } from "firebase/auth";
 import { BACKEND_URL } from "../hooks/base";
+import { useNavigate } from "@tanstack/react-router";
+import { leaderboardIndexPage } from "~/routes";
 
 function LogIn() {
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ function LogIn() {
   const logIn = (email: string, password: string) =>
     signInWithEmailAndPassword(auth, email, password)
       .then(() => {
-        navigate("/leaderboard");
+        navigate(leaderboardIndexPage);
       })
       .catch((error) => {
         setError(error.message);
@@ -82,7 +83,7 @@ function SignUp() {
           },
           { headers: { Authorization: await user?.getIdToken() } }
         );
-        navigate("/leaderboard");
+        navigate(leaderboardIndexPage);
       })
       .catch((error) => {
         setError(error.message);
@@ -157,7 +158,7 @@ function SignUp() {
   );
 }
 
-export default function Component() {
+export default function SignIn() {
   const [signIn, setSignIn] = useState(true);
   return (
     <Sidebar title={signIn ? "Log In" : "Sign Up"}>

@@ -5,7 +5,7 @@ import { onAuthStateChanged, UserInfo } from "firebase/auth";
 import "firebase/compat/auth";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import { UserContext } from "~/components/UserContext";
+import { UserContext } from "src/components/UserContext";
 type User = UserInfo & { getIdToken: () => Promise<string> };
 
 const useUserToken = () => {

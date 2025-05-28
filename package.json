@@ -5,11 +5,11 @@
   "dependencies": {
     "@radix-ui/react-collapsible": "^1.1.0",
     "@radix-ui/react-dropdown-menu": "^2.1.1",
-    "@react-router/node": "^7.5.3",
-    "@react-router/serve": "^7.5.3",
     "@tanstack/react-query": "^5.32.0",
     "@tanstack/react-query-persist-client": "^5.51.15",
+    "@tanstack/react-router": "^1.120.11",
     "@tanstack/react-table": "^8.16.0",
+    "@vitejs/plugin-react": "^4.5.0",
     "axios": "^1.6.8",
     "firebase": "^10.11.1",
     "firebaseui": "^6.1.0",
@@ -17,21 +17,17 @@
     "isbot": "^5.1.27",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
-    "react-router": "^7.5.3",
-    "react-router-dom": "^7.5.3",
     "react-tooltip": "^5.26.4",
-    "use-debounce": "^10.0.0"
+    "use-debounce": "^10.0.0",
+    "zod": "^3.25.32"
   },
   "type": "module",
   "scripts": {
-    "build": "react-router build",
-    "dev": "react-router dev",
-    "start": "react-router-serve ./build/server/index.js",
-    "typecheck": "react-router typegen && tsc"
+    "dev": "vite",
+    "build": "tsc && vite build"
   },
   "eslintConfig": {},
   "devDependencies": {
-    "@react-router/dev": "^7.5.3",
     "@tailwindcss/vite": "^4.1.7",
     "@types/node": "^20",
     "@types/react": "^19.1.2",

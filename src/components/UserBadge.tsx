@@ -3,6 +3,7 @@ import firebase from "firebase/compat/app";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import Gear from "../icons/Gear";
 import { UserContext } from "./UserContext";
+import { Link } from "@tanstack/react-router";
 
 function UserBadge() {
   const { user } = useContext(UserContext);
@@ -21,18 +22,18 @@ function UserBadge() {
               className=" hover:bg-[#fff3] flex border-none"
               asChild
             >
-              <a href="/rules" className="fg-color w-full">
+              <Link to="/rules" className="fg-color w-full">
                 <div className="p-2">Rules</div>
-              </a>
+              </Link>
             </DropdownMenu.Item>
             {user && (
               <DropdownMenu.Item
                 className=" hover:bg-[#fff3] flex border-none"
                 asChild
               >
-                <a href="/profile" className="fg-color w-full">
+                <Link to="/profile" className="fg-color w-full">
                   <div className="p-2">Profile</div>
-                </a>
+                </Link>
               </DropdownMenu.Item>
             )}
             {user && (
@@ -40,9 +41,9 @@ function UserBadge() {
                 className=" hover:bg-[#fff3] flex border-none"
                 asChild
               >
-                <a href="/leaderboard/edit" className="fg-color w-full">
+                <Link to="/leaderboard/edit" className="fg-color w-full">
                   <div className="p-2">My leaderboards</div>
-                </a>
+                </Link>
               </DropdownMenu.Item>
             )}
             <DropdownMenu.Item
@@ -50,17 +51,17 @@ function UserBadge() {
               asChild
             >
               {!user ? (
-                <a href="/sign-in" className="fg-color w-full">
+                <Link to="/sign-in" className="fg-color w-full">
                   <div className="p-2">Sign in</div>
-                </a>
+                </Link>
               ) : (
-                <a
-                  href="/"
+                <Link
+                  to="/"
                   onClick={() => firebase.auth().signOut()}
                   className="fg-color w-full"
                 >
                   <div className="p-2">Sign out</div>
-                </a>
+                </Link>
               )}
             </DropdownMenu.Item>
           </div>

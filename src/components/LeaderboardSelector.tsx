@@ -7,6 +7,7 @@ import Countdown from "./Countdown";
 import * as Collapsible from "@radix-ui/react-collapsible";
 import { useIsMobile } from "../hooks/UseIsMobile";
 import DownArrow from "../icons/DownArrow";
+import { Link } from "@tanstack/react-router";
 
 export default function LeaderboardSelector({
   leaderboard,
@@ -81,7 +82,7 @@ const LeaderboardSelectorItem = ({
   name: string;
 }) => {
   return (
-    <a
+    <Link
       style={{
         background: isSelected
           ? `linear-gradient(90deg, var(--accent-color) 0%, var(--accent-color-two) 100%)`
@@ -89,7 +90,8 @@ const LeaderboardSelectorItem = ({
         color: isSelected ? "var(--bg-color)" : "var(--fg-color)",
       }}
       className="flex flex-col border-none gap-1 py-[1px] rounded-md bg-[var(--bg-tertiary)] hover:bg-[var(--accent-half-opacity)] transition-all w-full items-center"
-      href={`/leaderboard/${id}`}
+      to="/leaderboard/$leaderboardId"
+      params={{ leaderboardId: id }}
     >
       <span className={" text-nowrap"}>{name}</span>
       {isDynamic && (
@@ -100,6 +102,6 @@ const LeaderboardSelectorItem = ({
           hideDisplay={true}
         />
       )}
-    </a>
+    </Link>
   );
 };
