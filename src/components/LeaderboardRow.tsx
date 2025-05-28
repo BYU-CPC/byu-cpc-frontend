@@ -5,7 +5,7 @@ import DeadFlame from "../icons/DeadFlame";
 import React from "react";
 import { UserStats } from "../score/score";
 import ProgressBar from "./ProgressBar";
-import { useCurrentLeaderboard, useLeaderboard } from "../hooks/UseLeaderboard";
+import { useLeaderboard } from "../hooks/UseLeaderboard";
 import FlameIcon from "./FlameIcon";
 function WeeklyProblemBox({
   solved,
@@ -28,18 +28,24 @@ function WeeklyProblemBox({
 function numberWithCommas(x: number) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
+type Leaderboard = ReturnType<typeof useLeaderboard>["data"];
 
 type LeaderboardRowProps = {
   userStats: UserStats;
   rank: number;
   isMe: boolean;
+  leaderboard: Leaderboard;
 };
 
-export function LeaderboardRow({ userStats, rank, isMe }: LeaderboardRowProps) {
+export function LeaderboardRow({
+  userStats,
+  rank,
+  isMe,
+  leaderboard,
+}: LeaderboardRowProps) {
   const userId = userStats.user.id;
-  const [leaderboard] = useCurrentLeaderboard();
-  const { data } = useLeaderboard(leaderboard);
-  const thisWeek = data && "thisWeek" in data ? data.thisWeek : undefined;
+  const thisWeek =
+    leaderboard && "thisWeek" in leaderboard ? leaderboard.thisWeek : undefined;
   const allProblemsLength =
     (thisWeek?.kattis?.length ?? 0) + (thisWeek?.codeforces?.length ?? 0);
   const solvedKattis = new Set(Object.keys(userStats.user.kattis_submissions));

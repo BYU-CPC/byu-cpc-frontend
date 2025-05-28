@@ -1,32 +1,33 @@
-import React, { FormEvent } from "react";
+import React, { FormEvent, useContext } from "react";
 import { useEffect, useState } from "react";
 import { Sidebar } from "../components/Sidebar";
 import { useUserProfile } from "../hooks/UseProfile";
-import useUser from "../hooks/UseProfile";
 import { useDebounce } from "use-debounce";
 import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
 import { BACKEND_URL } from "../hooks/base";
+import { UserContext } from "src/components/UserContext";
 
 async function isPlatformUsernameValid(username: string, platform: string) {
   if (!username) {
     return true;
   }
-  const response = await axios.post(`${BACKEND_URL}/${platform}/validate`, {
+  const response = await axios.post(`${BACKEND_URL}/validate_username`, {
     username,
+    platform,
   });
   return response.data.valid;
 }
 
 function PlatformUsernameSelector({ platform }: { platform: string }) {
-  const profile = useUserProfile();
-  const user = useUser();
+  const { data: profile } = useUserProfile();
+  const { token } = useContext(UserContext);
   const platformDisplay = platform[0].toUpperCase() + platform.slice(1);
   const [savedInput, setSavedInput] = useState(false);
   const [usernameInput, setUsernameInput] = useState("");
   useEffect(() => {
     if (profile) {
-      setUsernameInput(profile[platform + "_username"]);
+      setUsernameInput(profile.usernames[platform] ?? "");
     }
   }, [profile, platform]);
   const [usernameInputDebounce] = useDebounce(usernameInput, 2000);
@@ -41,13 +42,19 @@ function PlatformUsernameSelector({ platform }: { platform: string }) {
   }, [usernameInputDebounce, platform]);
   const { mutateAsync, isPending } = useMutation({
     mutationFn: async () => {
-      await axios.post(`${BACKEND_URL}/set_${platform}_username`, {
-        id_token: await user?.getIdToken(),
-        username: usernameInput,
-      });
+      await axios.post(
+        `${BACKEND_URL}/set_username`,
+        {
+          username: usernameInput,
+          platform,
+        },
+        {
+          headers: { Authorization: token },
+        }
+      );
       setSavedInput(true);
     },
-    mutationKey: ["set_kattis_username"],
+    mutationKey: ["set_username"],
   });
   const handleKattisSubmit = (event: FormEvent) => {
     event.preventDefault();
@@ -72,7 +79,7 @@ function PlatformUsernameSelector({ platform }: { platform: string }) {
             usernameError ||
             isPending ||
             savedInput ||
-            usernameInput === profile[`${platform}_username`]
+            usernameInput === profile?.usernames[platform]
           }
         >
           Save
@@ -87,10 +94,10 @@ function PlatformUsernameSelector({ platform }: { platform: string }) {
   );
 }
 
-export function Component() {
-  const profile = useUserProfile();
+export default function Profile() {
+  const { data: profile } = useUserProfile();
   return (
-    <Sidebar>
+    <Sidebar title="Profile settings">
       {profile ? (
         <div className="flex w-full p-6">
           <div className="flex flex-col gap-4 bg-secondary p-6 w-full">
@@ -105,5 +112,3 @@ export function Component() {
     </Sidebar>
   );
 }
-
-Component.displayName = "Profile";

@@ -1,7 +1,6 @@
 import React, { FormEvent } from "react";
 import { useState } from "react";
 import { Sidebar } from "../components/Sidebar";
-import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./SignIn.css";
 import "firebaseui/dist/firebaseui.css";
@@ -13,19 +12,25 @@ import {
   browserLocalPersistence,
 } from "firebase/auth";
 import { BACKEND_URL } from "../hooks/base";
+import { useNavigate } from "@tanstack/react-router";
+import { leaderboardIndexPage } from "~/routes";
 
 function LogIn() {
   const navigate = useNavigate();
   const auth = getAuth();
   setPersistence(auth, browserLocalPersistence);
-  const logIn = (email: string, password: string) =>
+  const [loading, setLoading] = useState(false);
+  const logIn = (email: string, password: string) => {
+    setLoading(true);
     signInWithEmailAndPassword(auth, email, password)
-      .then(() => {
-        navigate("/challenge");
+      .then(async () => {
+        await navigate({ to: "/" });
+        setLoading(false);
       })
       .catch((error) => {
         setError(error.message);
       });
+  };
   const [error, setError] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -54,7 +59,11 @@ function LogIn() {
           onChange={(e) => setPassword(e.target.value)}
         />
       </div>
-      <button type="submit" className="submit" disabled={!email || !password}>
+      <button
+        type="submit"
+        className="submit"
+        disabled={!email || !password || loading}
+      >
         Sign In
       </button>
       {error ?? <div className="error">{error}</div>}
@@ -73,13 +82,16 @@ function SignUp() {
     createUserWithEmailAndPassword(getAuth(), email, password)
       .then(async (userCredential) => {
         const user = userCredential.user;
-        await axios.post(`${BACKEND_URL}/create_user`, {
-          id_token: await user.getIdToken(),
-          display_name: displayName,
-          kattis_username: kattisUsername,
-          codeforces_username: codeforcesUsername,
-        });
-        navigate("/challenge");
+        await axios.post(
+          `${BACKEND_URL}/create_user`,
+          {
+            display_name: displayName,
+            kattis_username: kattisUsername,
+            codeforces_username: codeforcesUsername,
+          },
+          { headers: { Authorization: await user?.getIdToken() } }
+        );
+        navigate(leaderboardIndexPage);
       })
       .catch((error) => {
         setError(error.message);
@@ -154,10 +166,10 @@ function SignUp() {
   );
 }
 
-export function Component() {
+export default function SignIn() {
   const [signIn, setSignIn] = useState(true);
   return (
-    <Sidebar>
+    <Sidebar title={signIn ? "Log In" : "Sign Up"}>
       <div className="flex-center w-full">
         <div className="flex-col bg-secondary auth ">
           <div className="flex flex-row flex-center gap-9">
@@ -181,5 +193,3 @@ export function Component() {
     </Sidebar>
   );
 }
-
-Component.displayName = "SignIn";

@@ -1,3 +1,4 @@
+@import "tailwindcss";
 :root {
   color-scheme: light dark;
   --white: #ffffff;
@@ -125,6 +126,11 @@ button {
   padding: 10px;
   cursor: pointer;
 }
+button:hover {
+  background-color: var(--bg-color);
+  color: var(--fg-color);
+}
+
 button:disabled {
   background-color: var(--bg-secondary-color);
   cursor: default;
