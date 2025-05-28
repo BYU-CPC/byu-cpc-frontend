@@ -19,14 +19,18 @@ function LogIn() {
   const navigate = useNavigate();
   const auth = getAuth();
   setPersistence(auth, browserLocalPersistence);
-  const logIn = (email: string, password: string) =>
+  const [loading, setLoading] = useState(false);
+  const logIn = (email: string, password: string) => {
+    setLoading(true);
     signInWithEmailAndPassword(auth, email, password)
-      .then(() => {
-        navigate(leaderboardIndexPage);
+      .then(async () => {
+        await navigate({ to: "/" });
+        setLoading(false);
       })
       .catch((error) => {
         setError(error.message);
       });
+  };
   const [error, setError] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -55,7 +59,11 @@ function LogIn() {
           onChange={(e) => setPassword(e.target.value)}
         />
       </div>
-      <button type="submit" className="submit" disabled={!email || !password}>
+      <button
+        type="submit"
+        className="submit"
+        disabled={!email || !password || loading}
+      >
         Sign In
       </button>
       {error ?? <div className="error">{error}</div>}
