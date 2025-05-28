@@ -5,7 +5,7 @@ export default function Rules() {
   return (
     <Sidebar title="Rules">
       <div className="overflow-y-auto p-6">
-        <div className="responsive-fg bg-secondary p-2">
+        <div className="responsive-fg bg-secondary p-6 flex flex-col gap-4 rounded">
           <p className="large bold">Contest</p>
           <p>
             The BYU Competitive Programming Challenge is open to anyone who
@@ -94,36 +94,38 @@ export default function Rules() {
             We recognize that cheating is possible and very tempting. Any form
             of cheating will result in disqualification from the contest.
             Cheating includes the following:
-            <ul>
-              <li>Submitting entire solutions that you did not write</li>
-              <li>
-                Submitting entire solutions that you do not mostly understand
-                &mdash; Using another person's implementation of a general
-                algorithm that you use to help solve a problem is okay
-              </li>
-              <li>Spoofing submissions</li>
-              <li>
-                Submitting code you had written previously on a separate account
-              </li>
-              <li>Using LLMs to solve problems for you</li>
-            </ul>
-            Things that are not cheating include:
-            <ul>
-              <li>
-                Using other peoples' implementations for general algorithms/data
-                structure &mdash; Using book code without completely
-                understanding it is okay
-              </li>
-              <li>
-                Discussing problems with others to understand their solutions
-              </li>
-              <li>
-                Using LLMs as an assistant to get you pointed in the right
-                direction
-              </li>
-              <li>Reading Codeforces tutorials</li>
-              <li>Finding hints online to solve problems</li>
-            </ul>
+          </p>
+          <ul className="list-disc pl-6">
+            <li>Submitting entire solutions that you did not write</li>
+            <li>
+              Submitting entire solutions that you do not mostly understand
+              &mdash; Using another person's implementation of a general
+              algorithm that you use to help solve a problem is okay
+            </li>
+            <li>Spoofing submissions</li>
+            <li>
+              Submitting code you had written previously on a separate account
+            </li>
+            <li>Using LLMs to solve problems for you</li>
+          </ul>
+          <p>Things that are not cheating include:</p>
+          <ul className="list-disc pl-6">
+            <li>
+              Using other peoples' implementations for general algorithms/data
+              structure &mdash; Using book code without completely understanding
+              it is okay
+            </li>
+            <li>
+              Discussing problems with others to understand their solutions
+            </li>
+            <li>
+              Using LLMs as an assistant to get you pointed in the right
+              direction
+            </li>
+            <li>Reading Codeforces tutorials</li>
+            <li>Finding hints online to solve problems</li>
+          </ul>
+          <p>
             To help discourage cheating, anyone who wins a prize may be asked to
             demonstrate that they are capable of solving the problems they claim
             to have solved.

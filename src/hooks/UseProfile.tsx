@@ -25,8 +25,8 @@ const useUserToken = () => {
     refetchOnWindowFocus: false,
     refetchOnMount: false,
     refetchOnReconnect: false,
-    refetchInterval: 1000 * 60 * 5, // Refetch every 5 minutes
-    gcTime: 1000 * 60 * 30, // Garbage collect after 1 hour
+    refetchInterval: 1000 * 60 * 3,
+    gcTime: 1000 * 60 * 30,
   });
 };
 

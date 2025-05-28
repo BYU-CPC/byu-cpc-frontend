@@ -49,8 +49,6 @@ declare module "@tanstack/react-router" {
 
 const Wrapped = () => {
   const { user, token, isPending } = useUser();
-  if (isPending)
-    return <div className="pt-16 p-4 container mx-auto">Loading...</div>;
   return (
     <UserContext.Provider value={{ user, token, isPending }}>
       <RouterProvider router={router} />
