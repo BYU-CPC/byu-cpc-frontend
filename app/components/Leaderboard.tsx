@@ -9,9 +9,11 @@ import {
   staticLeaderboardDisplayNames,
   useLeaderboard,
   useLeaderboardIndex,
+  useLeaderboardJoin,
 } from "../hooks/UseLeaderboard";
 import Countdown from "./Countdown";
 import { UserContext } from "./UserContext";
+import { useSearchParams } from "react-router";
 
 function formatCodeforcesId(input: string) {
   const match = input.match(/^(\d+)(\D.*)$/);
@@ -25,8 +27,14 @@ function formatCodeforcesId(input: string) {
 export function Leaderboard({ leaderboard }: { leaderboard: string }) {
   const { user } = useContext(UserContext);
   const users = useUsers();
+  const [searchParams] = useSearchParams();
+  const invitationId = searchParams.get("invitationId");
+  const { mutateAsync, isPending } = useLeaderboardJoin(
+    leaderboard,
+    invitationId ?? undefined
+  );
 
-  const { data } = useLeaderboard(leaderboard);
+  const { data } = useLeaderboard(leaderboard, invitationId ?? undefined);
   const thisWeek = data && "thisWeek" in data ? data.thisWeek : undefined;
   const allStudyProblems =
     data && "allProblems" in data ? data.allProblems : undefined;
@@ -55,9 +63,13 @@ export function Leaderboard({ leaderboard }: { leaderboard: string }) {
     document.title = leaderboardData?.name ?? "Leaderboard";
   }, [leaderboardData?.name]);
 
+  const isStatic = Object.keys(staticLeaderboardDisplayNames).includes(
+    leaderboard
+  );
+
   const calculatedUsers = useQueries({
     queries: users
-      .filter((u) => data?.members.includes(u.id))
+      .filter((u) => isStatic || data?.members?.includes(u.id))
       .map((user) => ({
         queryKey: [leaderboard, "score", user.id],
         queryFn: async () => {
@@ -79,7 +91,15 @@ export function Leaderboard({ leaderboard }: { leaderboard: string }) {
   }
   return (
     <div className="gap-6 flex flex-col w-full items-center overflow-y-scroll p-6">
-      {!Object.keys(staticLeaderboardDisplayNames).includes(leaderboard) && (
+      {!isStatic &&
+        !data?.has_joined &&
+        data?.can_join &&
+        !data.members?.includes(user?.uid ?? "") && (
+          <button disabled={isPending} onClick={() => mutateAsync()}>
+            Join
+          </button>
+        )}
+      {!isStatic && (
         <Countdown
           className="w-full  bg-secondary z-[-1] rounded-lg"
           leaderboard={leaderboard}
@@ -154,7 +174,7 @@ export function Leaderboard({ leaderboard }: { leaderboard: string }) {
         .sort((a, b) => b.score - a.score)
         .map((u, i) => (
           <LeaderboardRow
-            leaderboard={leaderboard}
+            leaderboard={data}
             key={u.user.id}
             userStats={u}
             rank={i + 1}

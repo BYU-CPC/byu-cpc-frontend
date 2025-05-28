@@ -28,12 +28,13 @@ function WeeklyProblemBox({
 function numberWithCommas(x: number) {
   return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
+type Leaderboard = ReturnType<typeof useLeaderboard>["data"];
 
 type LeaderboardRowProps = {
   userStats: UserStats;
   rank: number;
   isMe: boolean;
-  leaderboard: string;
+  leaderboard: Leaderboard;
 };
 
 export function LeaderboardRow({
@@ -43,8 +44,8 @@ export function LeaderboardRow({
   leaderboard,
 }: LeaderboardRowProps) {
   const userId = userStats.user.id;
-  const { data } = useLeaderboard(leaderboard);
-  const thisWeek = data && "thisWeek" in data ? data.thisWeek : undefined;
+  const thisWeek =
+    leaderboard && "thisWeek" in leaderboard ? leaderboard.thisWeek : undefined;
   const allProblemsLength =
     (thisWeek?.kattis?.length ?? 0) + (thisWeek?.codeforces?.length ?? 0);
   const solvedKattis = new Set(Object.keys(userStats.user.kattis_submissions));

@@ -33,7 +33,7 @@ function Countdown({
   const { data } = useLeaderboardIndex();
   const board = data.combined?.[leaderboard];
   const currentTime = useDebounce(new Date(), 500)[0];
-  if (!board) return null;
+  if (!board || !board.start || !board.finish) return null;
   const timeDisplay = formatTime(
     board.finish.getTime() - currentTime.getTime()
   );

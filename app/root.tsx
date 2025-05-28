@@ -10,7 +10,7 @@ import {
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import type { Route } from "./+types/root";
 import React, { StrictMode } from "react";
-import { BUSTER } from "./hooks/base";
+export const BUSTER = "1.0.3";
 import { del, get, set } from "idb-keyval";
 import firebase from "firebase/compat/app";
 import {
@@ -48,6 +48,7 @@ const queryClient = new QueryClient({
     },
   },
 });
+export const environment = import.meta.env.DEV ? "development" : "production";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -80,15 +81,23 @@ export function Layout({ children }: { children: React.ReactNode }) {
   );
 }
 
+const Wrapped = () => {
+  const { user, token, isPending } = useUser();
+  if (isPending)
+    return <div className="pt-16 p-4 container mx-auto">Loading...</div>;
+  return (
+    <UserContext.Provider value={{ user, token, isPending }}>
+      <Outlet />
+    </UserContext.Provider>
+  );
+};
+
 export default function App() {
-  const { user, token } = useUser();
   return (
     <StrictMode>
-      <UserContext.Provider value={{ user, token }}>
-        <QueryClientProvider client={queryClient}>
-          <Outlet />
-        </QueryClientProvider>
-      </UserContext.Provider>
+      <QueryClientProvider client={queryClient}>
+        <Wrapped />
+      </QueryClientProvider>
     </StrictMode>
   );
 }
@@ -104,7 +113,7 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
       error.status === 404
         ? "The requested page could not be found."
         : error.statusText || details;
-  } else if (import.meta.env.DEV && error && error instanceof Error) {
+  } else if (environment === "development" && error && error instanceof Error) {
     details = error.message;
     stack = error.stack;
   }

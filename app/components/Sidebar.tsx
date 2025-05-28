@@ -9,7 +9,8 @@ const Sidebar = ({
   title,
 }: React.PropsWithChildren & { title: string; leaderboard?: string }) => {
   const location = useLocation();
-  const isChallenge = location.pathname.includes("/leaderboard");
+  const isChallenge =
+    location.pathname.includes("/leaderboard") || location.pathname === "/";
   const { setWidth } = useIsMobile();
   useEffect(() => {
     setWidth(window.innerWidth);

@@ -24,10 +24,18 @@ const LeaderboardRow = ({
         </a>
         {!isStatic && (
           <div className="flex flex-row text-sm gap-2">
-            from
-            <span>{leaderboard.start.toLocaleString()}</span>
-            to
-            <span>{leaderboard.finish.toLocaleString()}</span>
+            {leaderboard.start && (
+              <>
+                from
+                <span>{leaderboard.start.toLocaleString()}</span>
+              </>
+            )}
+            {leaderboard.finish && (
+              <>
+                to
+                <span>{leaderboard.finish.toLocaleString()}</span>
+              </>
+            )}
           </div>
         )}
       </div>

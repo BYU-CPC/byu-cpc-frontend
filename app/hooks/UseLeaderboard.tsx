@@ -18,13 +18,13 @@ const durations: Record<StaticLearderboard, number> = {
   all: 1000 * 60 * 60 * 24 * 365 * 100,
 };
 
-export type LeaderboardEntry = { start: Date; finish: Date };
+export type LeaderboardEntry = { start: Date | null; finish: Date | null };
 
 type LeaderboardResponse = {
   id: string;
-  start: number;
+  start: number | null;
   name: string;
-  finish: number;
+  finish: number | null;
   public_view: boolean;
   public_join: boolean;
 };
@@ -39,22 +39,25 @@ const getLeaderboardIndex = async (
   return response.data;
 };
 
-const transformLeaderboardResponse = (response: LeaderboardResponse[]) =>
+const transformLeaderboardResponse = <T extends LeaderboardResponse>(
+  response: T[]
+) =>
   response.map((value) => ({
     ...value,
-    start: new Date(value.start * 1000),
-    finish: new Date(value.finish * 1000),
+    start: value.start ? new Date(value.start * 1000) : null,
+    finish: value.finish ? new Date(value.finish * 1000) : null,
     publicView: value.public_view,
     publicJoin: value.public_join,
   }));
 export const useLeaderboardIndex = () => {
-  const { token } = useContext(UserContext);
+  const { token, isPending } = useContext(UserContext);
   const query = useQuery({
     queryKey: ["leaderboardIndex"],
     queryFn: async () =>
       transformLeaderboardResponse(
         await getLeaderboardIndex(token ?? undefined)
       ),
+    enabled: !isPending,
   });
   const staticLeaderboard = Object.fromEntries(
     staticLeaderboardValues.map((key) => [
@@ -93,17 +96,18 @@ const getJoinedLeaderboards = async (userToken?: string): Promise<string[]> => {
 };
 
 export const useJoinedLeaderboards = () => {
-  const { token } = useContext(UserContext);
+  const { token, isPending } = useContext(UserContext);
   return useQuery({
     queryKey: ["joinedLeaderboards"],
     queryFn: () => getJoinedLeaderboards(token ?? undefined),
     staleTime: 1000,
+    enabled: !isPending,
   });
 };
 
 const getMyLeaderboards = async (
   userToken?: string
-): Promise<LeaderboardResponse[]> => {
+): Promise<(LeaderboardResponse & { invitation_id: string | null })[]> => {
   return (
     await axios.get(`${BACKEND_URL}/leaderboard/created`, {
       headers: { Authorization: userToken },
@@ -112,12 +116,13 @@ const getMyLeaderboards = async (
 };
 
 export const useMyLeaderboards = () => {
-  const { token } = useContext(UserContext);
+  const { token, isPending } = useContext(UserContext);
   return useQuery({
     queryKey: ["myLeaderboards"],
     queryFn: async () =>
       transformLeaderboardResponse(await getMyLeaderboards(token ?? undefined)),
     staleTime: 1000,
+    enabled: !isPending,
   });
 };
 
@@ -136,7 +141,7 @@ export type Leaderboard = {
   rules?: string;
   scoring?: unknown;
   created_by_id?: string;
-  members: string[];
+  members: string[] | null;
   can_join: boolean;
   has_joined: boolean;
 } & LeaderboardTime;
@@ -145,20 +150,25 @@ export type StudyProblems = Record<Platform, Set<string>>;
 
 const getLeaderboard = async (
   id: string,
-  invitationId?: string
+  invitationId?: string,
+  token?: string
 ): Promise<Leaderboard | null> => {
   if (staticLeaderboardValues.includes(id as StaticLearderboard)) return null;
   return (
     await axios.get(`${BACKEND_URL}/leaderboard/${id}`, {
       params: { invitation_id: invitationId },
+      headers: { Authorization: token },
     })
   ).data;
 };
 
 export const useLeaderboard = (id: string, invitationId?: string) => {
+  const { token, isPending } = useContext(UserContext);
   const query = useQuery({
     queryKey: ["leaderboard", id, invitationId],
-    queryFn: () => getLeaderboard(id, invitationId),
+    queryFn: () => getLeaderboard(id, invitationId, token ?? undefined),
+    enabled:
+      !isPending && !staticLeaderboardValues.includes(id as StaticLearderboard),
   });
   if (!query.data) return query;
   const practiceSets = Object.entries(query.data.practice_set ?? {})
@@ -176,7 +186,13 @@ export const useLeaderboard = (id: string, invitationId?: string) => {
   const thisWeek = practiceSets.at(practiceSets.length - 1);
   return {
     ...query,
-    data: { allProblems, practiceSets, thisWeek, members: query.data.members },
+    data: {
+      ...query.data,
+      allProblems,
+      practiceSets,
+      thisWeek,
+      members: query.data.members,
+    },
   };
 };
 
@@ -193,7 +209,7 @@ type UpsertLeaderboardData = {
 
 export const useLeaderboardUpsert = () => {
   const queryClient = useQueryClient();
-  const { token } = useContext(UserContext);
+  const { token, isPending } = useContext(UserContext);
   return useMutation({
     mutationKey: ["upsert_leaderboard"],
     mutationFn: async (data: UpsertLeaderboardData) => {
@@ -214,6 +230,31 @@ export const useLeaderboardUpsert = () => {
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ["myLeaderboards"] });
+      queryClient.invalidateQueries({ queryKey: ["leaderboardIndex"] });
+    },
+  });
+};
+
+export const useLeaderboardJoin = (
+  leaderboard_id: string,
+  invitation_id?: string
+) => {
+  const queryClient = useQueryClient();
+  const { token } = useContext(UserContext);
+  return useMutation({
+    mutationKey: ["leaderboard_join", leaderboard_id, invitation_id],
+    mutationFn: async () => {
+      await axios.post(
+        `${BACKEND_URL}/leaderboard/join`,
+        { invitation_id, leaderboard_id },
+        { headers: { Authorization: token } }
+      );
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["leaderboard", leaderboard_id, invitation_id],
+      });
+      queryClient.invalidateQueries({ queryKey: ["joinedLeaderboards"] });
       queryClient.invalidateQueries({ queryKey: ["leaderboardIndex"] });
     },
   });

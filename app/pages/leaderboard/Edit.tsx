@@ -6,12 +6,12 @@ import { useUserProfile } from "../../hooks/UseProfile.js";
 import firebase from "firebase/compat/app";
 import { redirect } from "react-router";
 import {
-  useLeaderboardIndex,
   useLeaderboardUpsert,
   useMyLeaderboards,
 } from "~/hooks/UseLeaderboard.js";
 
 import { Input, Checkbox, NumberInput } from "../../components/Input";
+import { FRONTEND_URL } from "~/hooks/base.js";
 const Separator = () => {
   return <div className="w-full h-px bg-gray-300 my-4" />;
 };
@@ -88,12 +88,6 @@ const EditBody = ({
       setState((prev) => ({
         ...prev,
         publicView: true,
-      }));
-    }
-    if (state.publicView && !state.publicJoin) {
-      setState((prev) => ({
-        ...prev,
-        publicView: false,
       }));
     }
   }, [state.publicJoin]);
@@ -179,6 +173,9 @@ const EditBody = ({
           if (state.name.length < 3) {
             setError("name", "Leaderboard name must be at least 3 characters.");
           }
+          if (state.name.length > 30) {
+            setError("name", "Leaderboard name must be at most 50 characters.");
+          }
           if (
             otherLeaderboardNames.includes(state.name) &&
             state.name !== initialState?.name
@@ -236,9 +233,9 @@ const AddLeaderboard = ({
   );
 };
 
-type LeaderboardInfo = ReturnType<
-  typeof useLeaderboardIndex
->["data"]["dynamic"][string];
+type LeaderboardInfo = NonNullable<
+  ReturnType<typeof useMyLeaderboards>["data"]
+>[number];
 
 const LeaderboardRow = ({
   otherLeaderboardNames,
@@ -258,15 +255,26 @@ const LeaderboardRow = ({
           <Collapsible.Trigger className="rounded text-xs">
             Edit
           </Collapsible.Trigger>
-          <button className="rounded text-xs">Copy invitation url</button>
+          {info.invitation_id && (
+            <button
+              className="rounded text-xs"
+              onClick={() =>
+                navigator.clipboard.writeText(
+                  `${FRONTEND_URL}/leaderboard/${info.id}?invitationId=${info.invitation_id}`
+                )
+              }
+            >
+              Copy invitation url
+            </button>
+          )}
         </div>
         <EditBody
           close={() => setOpen(false)}
           otherLeaderboardNames={otherLeaderboardNames}
           initialState={{
             ...info,
-            start: info.start?.getTime() / 1000,
-            finish: info.finish?.getTime() / 1000,
+            start: info.start ? info.start?.getTime() / 1000 : null,
+            finish: info.finish ? info.finish?.getTime() / 1000 : null,
           }}
           id={info.id}
         />

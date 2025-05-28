@@ -40,7 +40,7 @@ function UserBadge() {
                 className=" hover:bg-[#fff3] flex border-none"
                 asChild
               >
-                <a href="leaderboard/edit" className="fg-color w-full">
+                <a href="/leaderboard/edit" className="fg-color w-full">
                   <div className="p-2">My leaderboards</div>
                 </a>
               </DropdownMenu.Item>

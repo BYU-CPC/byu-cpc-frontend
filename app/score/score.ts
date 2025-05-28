@@ -122,8 +122,10 @@ export function getStats(
     )) {
       if (
         problemId === "contests" ||
-        submission.time < leaderboard.start.getTime() / 1000 ||
-        submission.time > leaderboard.finish.getTime() / 1000
+        (leaderboard.start &&
+          submission.time < leaderboard.start.getTime() / 1000) ||
+        (leaderboard.finish &&
+          submission.time > leaderboard.finish.getTime() / 1000)
       ) {
         continue;
       }
@@ -137,7 +139,7 @@ export function getStats(
       maxDifficulty[platform] = Math.max(maxDifficulty[platform], difficulty);
       const day = getDayFromDate(
         new Date(submission.time * 1000),
-        leaderboard.start
+        leaderboard.start ?? new Date(0)
       );
       const current_exp = exp.get(day) ?? DAILY_BONUS;
       const multiplier =
@@ -159,7 +161,7 @@ export function getStats(
       contests.size * CONTEST_BONUS
   );
   const level = getLevel(score);
-  const streak = getStreaks([...exp.keys()], leaderboard.start);
+  const streak = getStreaks([...exp.keys()], leaderboard.start ?? new Date(0));
 
   return {
     exp,
