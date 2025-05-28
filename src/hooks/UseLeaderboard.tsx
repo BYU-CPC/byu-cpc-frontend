@@ -101,7 +101,7 @@ export const useJoinedLeaderboards = () => {
     queryKey: ["joinedLeaderboards"],
     queryFn: () => getJoinedLeaderboards(token ?? undefined),
     staleTime: 1000,
-    enabled: !isPending,
+    enabled: !isPending && !!token,
   });
 };
 
