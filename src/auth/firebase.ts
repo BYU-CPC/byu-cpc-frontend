@@ -2,6 +2,7 @@ import { initializeApp } from "firebase/app";
 import {
   Auth,
   browserLocalPersistence,
+  browserPopupRedirectResolver,
   getAuth,
   GithubAuthProvider,
   GoogleAuthProvider,
@@ -19,6 +20,7 @@ const initializeFirebaseAuth = (): Auth => {
   try {
     return initializeAuth(firebaseApp, {
       persistence: browserLocalPersistence,
+      popupRedirectResolver: browserPopupRedirectResolver,
     });
   } catch {
     // Auth may already be initialized during development hot reloads.

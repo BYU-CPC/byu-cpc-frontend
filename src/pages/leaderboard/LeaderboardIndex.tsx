@@ -41,7 +41,7 @@ const LeaderboardRow = ({
           </div>
         )}
       </div>
-      {!isStatic && <Countdown leaderboard={leaderboard.id} fontSize="3px" />}
+      {!isStatic && <Countdown leaderboard={leaderboard.id} fontSize="8px" />}
     </div>
   );
 };

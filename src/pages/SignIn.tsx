@@ -5,9 +5,14 @@ import "./SignIn.css";
 import "firebaseui/dist/firebaseui.css";
 import { FirebaseError } from "firebase/app";
 import {
+  AuthCredential,
   AuthProvider,
+  GithubAuthProvider,
+  GoogleAuthProvider,
   User,
   createUserWithEmailAndPassword,
+  fetchSignInMethodsForEmail,
+  linkWithCredential,
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
@@ -30,6 +35,15 @@ type ProfileFormData = {
   displayName: string;
   kattisUsername: string;
   codeforcesUsername: string;
+};
+
+type ProviderName = "google" | "github";
+
+type PendingAccountLink = {
+  email: string;
+  credential: AuthCredential;
+  providerName: ProviderName;
+  signInMethods: string[];
 };
 
 const getAuthHeaders = async (user: User) => ({
@@ -58,11 +72,85 @@ async function createAppProfile(user: User, data: ProfileFormData) {
   );
 }
 
+function getProviderLabel(providerName: ProviderName) {
+  return providerName === "google" ? "Google" : "GitHub";
+}
+
+function ProviderIcon({ providerName }: { providerName: ProviderName }) {
+  if (providerName === "google") {
+    return (
+      <svg className="sso-icon" viewBox="0 0 18 18" aria-hidden="true">
+        <path
+          fill="#4285F4"
+          d="M17.64 9.2c0-.64-.06-1.25-.16-1.84H9v3.48h4.84a4.14 4.14 0 0 1-1.8 2.71v2.25h2.91c1.7-1.57 2.69-3.88 2.69-6.6z"
+        />
+        <path
+          fill="#34A853"
+          d="M9 18c2.43 0 4.47-.8 5.96-2.2l-2.91-2.25c-.8.54-1.84.86-3.05.86-2.35 0-4.34-1.59-5.05-3.72H.94v2.33A9 9 0 0 0 9 18z"
+        />
+        <path
+          fill="#FBBC05"
+          d="M3.95 10.69A5.41 5.41 0 0 1 3.67 9c0-.59.1-1.16.28-1.69V4.98H.94A9 9 0 0 0 0 9c0 1.45.35 2.82.94 4.02l3.01-2.33z"
+        />
+        <path
+          fill="#EA4335"
+          d="M9 3.58c1.32 0 2.51.46 3.44 1.35l2.58-2.58C13.46.89 11.43 0 9 0A9 9 0 0 0 .94 4.98l3.01 2.33C4.66 5.17 6.65 3.58 9 3.58z"
+        />
+      </svg>
+    );
+  }
+
+  return (
+    <svg className="sso-icon" viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        fill="currentColor"
+        d="M12 .5a12 12 0 0 0-3.79 23.39c.6.11.82-.26.82-.58v-2.02c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.8 1.3 3.49.99.11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.33-5.47-5.93 0-1.31.47-2.38 1.24-3.22-.12-.3-.54-1.52.12-3.18 0 0 1-.32 3.3 1.23a11.45 11.45 0 0 1 6 0c2.28-1.55 3.29-1.23 3.29-1.23.66 1.66.24 2.88.12 3.18.77.84 1.23 1.91 1.23 3.22 0 4.61-2.8 5.63-5.48 5.92.43.37.81 1.1.81 2.22v3.29c0 .32.22.7.83.58A12 12 0 0 0 12 .5z"
+      />
+    </svg>
+  );
+}
+
+function ProviderButton({
+  providerName,
+  children,
+  className = "",
+  ...buttonProps
+}: {
+  providerName: ProviderName;
+  children: React.ReactNode;
+} & React.ButtonHTMLAttributes<HTMLButtonElement>) {
+  return (
+    <button
+      {...buttonProps}
+      className={`sso-button sso-button-${providerName} ${className}`.trim()}
+    >
+      <ProviderIcon providerName={providerName} />
+      <span>{children}</span>
+    </button>
+  );
+}
+
+function getCredentialFromProviderError(
+  error: unknown,
+  providerName: ProviderName
+) {
+  if (!(error instanceof FirebaseError)) return null;
+  return providerName === "google"
+    ? GoogleAuthProvider.credentialFromError(error)
+    : GithubAuthProvider.credentialFromError(error);
+}
+
+function getExistingProviderName(method: string): ProviderName | null {
+  if (method === GoogleAuthProvider.PROVIDER_ID) return "google";
+  if (method === GithubAuthProvider.PROVIDER_ID) return "github";
+  return null;
+}
+
 function getAuthErrorMessage(error: unknown) {
   if (error instanceof FirebaseError) {
     switch (error.code) {
       case "auth/account-exists-with-different-credential":
-        return "An account already exists with this email using a different sign-in method. Try signing in with your original method first.";
+        return "This email is already registered. Sign in with the existing method below and we'll link the new sign-in option.";
       case "auth/popup-closed-by-user":
         return "Sign-in was cancelled before it completed.";
       case "auth/popup-blocked":
@@ -145,10 +233,11 @@ function LogIn({
 }) {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [ssoLoading, setSsoLoading] = useState<"google" | "github" | null>(null);
+  const [ssoLoading, setSsoLoading] = useState<ProviderName | null>(null);
   const [error, setError] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [pendingLink, setPendingLink] = useState<PendingAccountLink | null>(null);
 
   const completeSignIn = async (user: User) => {
     const profile = await getAppProfile(user);
@@ -159,12 +248,30 @@ function LogIn({
     }
   };
 
+  const linkPendingCredential = async (user: User) => {
+    if (!pendingLink) return;
+    if (user.email && user.email !== pendingLink.email) {
+      throw new Error(
+        `Please sign in as ${pendingLink.email} before linking ${getProviderLabel(
+          pendingLink.providerName
+        )}.`
+      );
+    }
+    await linkWithCredential(user, pendingLink.credential);
+    setPendingLink(null);
+    await completeSignIn(user);
+  };
+
   const logIn = async (email: string, password: string) => {
     setLoading(true);
     setError("");
     try {
       const credential = await signInWithEmailAndPassword(auth, email, password);
-      await completeSignIn(credential.user);
+      if (pendingLink) {
+        await linkPendingCredential(credential.user);
+      } else {
+        await completeSignIn(credential.user);
+      }
     } catch (error) {
       setError(getAuthErrorMessage(error));
     } finally {
@@ -172,8 +279,28 @@ function LogIn({
     }
   };
 
+  const signInAndMaybeLinkWithProvider = async (
+    providerName: ProviderName,
+    provider: AuthProvider
+  ) => {
+    setSsoLoading(providerName);
+    setError("");
+    try {
+      const credential = await signInWithPopup(auth, provider);
+      if (pendingLink) {
+        await linkPendingCredential(credential.user);
+      } else {
+        await completeSignIn(credential.user);
+      }
+    } catch (error) {
+      setError(getAuthErrorMessage(error));
+    } finally {
+      setSsoLoading(null);
+    }
+  };
+
   const logInWithProvider = async (
-    providerName: "google" | "github",
+    providerName: ProviderName,
     provider: AuthProvider
   ) => {
     setSsoLoading(providerName);
@@ -182,11 +309,42 @@ function LogIn({
       const credential = await signInWithPopup(auth, provider);
       await completeSignIn(credential.user);
     } catch (error) {
+      if (
+        error instanceof FirebaseError &&
+        error.code === "auth/account-exists-with-different-credential" &&
+        error.customData?.email
+      ) {
+        const pendingCredential = getCredentialFromProviderError(error, providerName);
+        if (pendingCredential) {
+          const existingMethods = await fetchSignInMethodsForEmail(
+            auth,
+            String(error.customData.email)
+          );
+          setPendingLink({
+            email: String(error.customData.email),
+            credential: pendingCredential,
+            providerName,
+            signInMethods: existingMethods,
+          });
+          setEmail(String(error.customData.email));
+          setPassword("");
+          setError("");
+          return;
+        }
+      }
       setError(getAuthErrorMessage(error));
     } finally {
       setSsoLoading(null);
     }
   };
+
+  const existingProviderName = pendingLink?.signInMethods
+    .map(getExistingProviderName)
+    .find((method): method is ProviderName => !!method);
+  const fallbackProviders = [
+    { name: "google" as const, provider: googleProvider },
+    { name: "github" as const, provider: githubProvider },
+  ].filter(({ name }) => name !== pendingLink?.providerName);
 
   const handleSubmit = (event: FormEvent) => {
     event.preventDefault();
@@ -195,24 +353,69 @@ function LogIn({
 
   return (
     <>
-      <div className="sso-buttons">
-        <button
-          type="button"
-          className="sso-button"
-          disabled={loading || !!ssoLoading}
-          onClick={() => logInWithProvider("google", googleProvider)}
-        >
-          {ssoLoading === "google" ? "Signing in..." : "Continue with Google"}
-        </button>
-        <button
-          type="button"
-          className="sso-button"
-          disabled={loading || !!ssoLoading}
-          onClick={() => logInWithProvider("github", githubProvider)}
-        >
-          {ssoLoading === "github" ? "Signing in..." : "Continue with GitHub"}
-        </button>
-      </div>
+      {pendingLink ? (
+        <div className="linking-notice">
+          <p>
+            An account already exists for <strong>{pendingLink.email}</strong>.
+            Sign in with your existing method below and we'll link {" "}
+            {getProviderLabel(pendingLink.providerName)} to that account.
+            {existingProviderName
+              ? ` Firebase says this account uses ${getProviderLabel(
+                  existingProviderName
+                )}.`
+              : " If you are not sure which method you used before, try email/password or another provider."}
+          </p>
+          <button
+            type="button"
+            className="secondary-button"
+            onClick={() => {
+              setPendingLink(null);
+              setPassword("");
+              setError("");
+            }}
+          >
+            Cancel linking
+          </button>
+        </div>
+      ) : (
+        <div className="sso-buttons">
+          <ProviderButton
+            type="button"
+            providerName="google"
+            disabled={loading || !!ssoLoading}
+            onClick={() => logInWithProvider("google", googleProvider)}
+          >
+            {ssoLoading === "google" ? "Signing in..." : "Continue with Google"}
+          </ProviderButton>
+          <ProviderButton
+            type="button"
+            providerName="github"
+            disabled={loading || !!ssoLoading}
+            onClick={() => logInWithProvider("github", githubProvider)}
+          >
+            {ssoLoading === "github" ? "Signing in..." : "Continue with GitHub"}
+          </ProviderButton>
+        </div>
+      )}
+
+      {pendingLink && (
+        <div className="sso-buttons">
+          {fallbackProviders.map(({ name, provider }) => (
+            <ProviderButton
+              key={name}
+              type="button"
+              providerName={name}
+              disabled={loading || !!ssoLoading}
+              onClick={() => signInAndMaybeLinkWithProvider(name, provider)}
+            >
+              {ssoLoading === name
+                ? "Signing in..."
+                : `Sign in with ${getProviderLabel(name)} to link`}
+            </ProviderButton>
+          ))}
+        </div>
+      )}
+
       <div className="auth-divider">or</div>
       <form className="sign-in-form" onSubmit={handleSubmit}>
         <div className="input-group">
@@ -221,6 +424,7 @@ function LogIn({
             className="input-field"
             id="email"
             value={email}
+            disabled={!!pendingLink}
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
@@ -239,20 +443,55 @@ function LogIn({
           className="submit"
           disabled={!email || !password || loading || !!ssoLoading}
         >
-          {loading ? "Signing in..." : "Sign In"}
+          {loading
+            ? "Signing in..."
+            : pendingLink
+              ? `Sign in and link ${getProviderLabel(pendingLink.providerName)}`
+              : "Sign In"}
         </button>
-        {error && <div className="error">{error}</div>}
       </form>
+
+      {error && <div className="error">{error}</div>}
     </>
   );
 }
 
-function SignUp() {
+function SignUp({
+  onNeedsProfile,
+}: {
+  onNeedsProfile: (user: User) => void;
+}) {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [ssoLoading, setSsoLoading] = useState<ProviderName | null>(null);
   const [error, setError] = useState("");
+
+  const completeProviderSignUp = async (user: User) => {
+    const profile = await getAppProfile(user);
+    if (profile) {
+      await navigate({ to: leaderboardIndexPage.to });
+    } else {
+      onNeedsProfile(user);
+    }
+  };
+
+  const signUpWithProvider = async (
+    providerName: ProviderName,
+    provider: AuthProvider
+  ) => {
+    setSsoLoading(providerName);
+    setError("");
+    try {
+      const credential = await signInWithPopup(auth, provider);
+      await completeProviderSignUp(credential.user);
+    } catch (error) {
+      setError(getAuthErrorMessage(error));
+    } finally {
+      setSsoLoading(null);
+    }
+  };
 
   const signUp = async (data: ProfileFormData) => {
     setLoading(true);
@@ -274,6 +513,25 @@ function SignUp() {
 
   return (
     <>
+      <div className="sso-buttons">
+        <ProviderButton
+          type="button"
+          providerName="google"
+          disabled={loading || !!ssoLoading}
+          onClick={() => signUpWithProvider("google", googleProvider)}
+        >
+          {ssoLoading === "google" ? "Signing up..." : "Sign up with Google"}
+        </ProviderButton>
+        <ProviderButton
+          type="button"
+          providerName="github"
+          disabled={loading || !!ssoLoading}
+          onClick={() => signUpWithProvider("github", githubProvider)}
+        >
+          {ssoLoading === "github" ? "Signing up..." : "Sign up with GitHub"}
+        </ProviderButton>
+      </div>
+      <div className="auth-divider">or</div>
       <form className="sign-in-form sign-up-account-form">
         <div className="input-group">
           <div className="input-label">Email*</div>
@@ -387,7 +645,7 @@ export default function SignIn() {
                 {signIn ? (
                   <LogIn onNeedsProfile={setProfileUser} />
                 ) : (
-                  <SignUp />
+                  <SignUp onNeedsProfile={setProfileUser} />
                 )}
               </div>
             </>
