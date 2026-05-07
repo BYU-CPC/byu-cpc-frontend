@@ -46,3 +46,51 @@
   background-color: var(--fg-secondary);
   cursor: default;
 }
+
+.sso-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 20px 0;
+}
+
+.sso-button,
+.secondary-button {
+  padding: 10px;
+  border: 1px solid var(--fg-secondary);
+  background-color: transparent;
+  color: var(--fg-color);
+  cursor: pointer;
+}
+
+.sso-button:hover,
+.secondary-button:hover {
+  border-color: var(--fg-color);
+  background-color: var(--bg-color);
+}
+
+.sso-button:disabled,
+.secondary-button:disabled {
+  color: var(--fg-secondary);
+  cursor: default;
+}
+
+.auth-divider {
+  color: var(--fg-secondary);
+  margin: 16px 0;
+  text-align: center;
+}
+
+.sign-up-account-form {
+  margin: 20px 0;
+}
+
+.error {
+  color: #ff6b6b;
+  margin-top: 12px;
+}
+
+.onboarding-copy {
+  color: var(--fg-secondary);
+  margin: 0;
+}

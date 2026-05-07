@@ -3,7 +3,6 @@ import React, { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 export const BUSTER = "1.0.3";
 import { del, get, set } from "idb-keyval";
-import firebase from "firebase/compat/app";
 import { RouterProvider } from "@tanstack/react-router";
 import { router } from "./routes";
 import {
@@ -21,11 +20,6 @@ function createIdbStorage(): AsyncStorage<PersistedQuery> {
     removeItem: async (key) => await del(key),
   };
 }
-const config = {
-  apiKey: "AIzaSyAIGt00sW24vecwBlgXJNyVKFje3ma9HqM",
-  authDomain: "byu-cpc.firebaseapp.com",
-};
-firebase.initializeApp(config);
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {

@@ -4,6 +4,10 @@ import { BACKEND_URL } from "./base";
 import { Platform, platformValues } from "../types/platform";
 import { useContext, useEffect } from "react";
 import { UserContext } from "src/components/UserContext";
+
+const getAuthHeaders = (token?: string | null) =>
+  token ? { Authorization: token } : undefined;
+
 const staticLeaderboardValues = ["week", "all"] as const;
 
 type StaticLearderboard = (typeof staticLeaderboardValues)[number];
@@ -34,7 +38,7 @@ const getLeaderboardIndex = async (
 ): Promise<LeaderboardResponse[]> => {
   const response = await axios.get(
     `${BACKEND_URL}/leaderboard/all_accessible`,
-    { headers: { Authorization: userToken } }
+    { headers: getAuthHeaders(userToken) }
   );
   return response.data;
 };
@@ -50,14 +54,13 @@ const transformLeaderboardResponse = <T extends LeaderboardResponse>(
     publicJoin: value.public_join,
   }));
 export const useLeaderboardIndex = () => {
-  const { token, isPending } = useContext(UserContext);
+  const { user, token } = useContext(UserContext);
   const query = useQuery({
-    queryKey: ["leaderboardIndex"],
+    queryKey: ["leaderboardIndex", user?.uid ?? "anonymous"],
     queryFn: async () =>
       transformLeaderboardResponse(
         await getLeaderboardIndex(token ?? undefined)
       ),
-    enabled: !isPending,
   });
   const staticLeaderboard = Object.fromEntries(
     staticLeaderboardValues.map((key) => [
@@ -87,10 +90,10 @@ export const useLeaderboardIndex = () => {
   };
 };
 
-const getJoinedLeaderboards = async (userToken?: string): Promise<string[]> => {
+const getJoinedLeaderboards = async (userToken: string): Promise<string[]> => {
   return (
     await axios.get(`${BACKEND_URL}/leaderboard/joined`, {
-      headers: { Authorization: userToken },
+      headers: getAuthHeaders(userToken),
     })
   ).data;
 };
@@ -99,18 +102,18 @@ export const useJoinedLeaderboards = () => {
   const { token, isPending } = useContext(UserContext);
   return useQuery({
     queryKey: ["joinedLeaderboards"],
-    queryFn: () => getJoinedLeaderboards(token ?? undefined),
+    queryFn: () => getJoinedLeaderboards(token!),
     staleTime: 1000,
     enabled: !isPending && !!token,
   });
 };
 
 const getMyLeaderboards = async (
-  userToken?: string
+  userToken: string
 ): Promise<(LeaderboardResponse & { invitation_id: string | null })[]> => {
   return (
     await axios.get(`${BACKEND_URL}/leaderboard/created`, {
-      headers: { Authorization: userToken },
+      headers: getAuthHeaders(userToken),
     })
   ).data;
 };
@@ -120,9 +123,9 @@ export const useMyLeaderboards = () => {
   return useQuery({
     queryKey: ["myLeaderboards"],
     queryFn: async () =>
-      transformLeaderboardResponse(await getMyLeaderboards(token ?? undefined)),
+      transformLeaderboardResponse(await getMyLeaderboards(token!)),
     staleTime: 1000,
-    enabled: !isPending,
+    enabled: !isPending && !!token,
   });
 };
 
@@ -157,18 +160,17 @@ const getLeaderboard = async (
   return (
     await axios.get(`${BACKEND_URL}/leaderboard/${id}`, {
       params: { invitation_id: invitationId },
-      headers: { Authorization: token },
+      headers: getAuthHeaders(token),
     })
   ).data;
 };
 
 export const useLeaderboard = (id: string, invitationId?: string) => {
-  const { token, isPending } = useContext(UserContext);
+  const { user, token } = useContext(UserContext);
   const query = useQuery({
-    queryKey: ["leaderboard", id, invitationId],
+    queryKey: ["leaderboard", id, invitationId, user?.uid ?? "anonymous"],
     queryFn: () => getLeaderboard(id, invitationId, token ?? undefined),
-    enabled:
-      !isPending && !staticLeaderboardValues.includes(id as StaticLearderboard),
+    enabled: !staticLeaderboardValues.includes(id as StaticLearderboard),
   });
   if (!query.data) return query;
   const practiceSets = Object.entries(query.data.practice_set ?? {})
@@ -224,7 +226,7 @@ export const useLeaderboardUpsert = () => {
           public_view: publicView,
           public_join: publicJoin,
         },
-        { headers: { Authorization: token } }
+        { headers: getAuthHeaders(token) }
       );
       return response.data as CreateLeaderboardResponse;
     },
@@ -247,7 +249,7 @@ export const useLeaderboardJoin = (
       await axios.post(
         `${BACKEND_URL}/leaderboard/join`,
         { invitation_id, leaderboard_id },
-        { headers: { Authorization: token } }
+        { headers: getAuthHeaders(token) }
       );
     },
     onSettled: () => {

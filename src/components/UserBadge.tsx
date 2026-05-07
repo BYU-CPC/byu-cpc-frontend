@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
-import firebase from "firebase/compat/app";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
+import { signOut } from "firebase/auth";
+import { auth } from "src/auth/firebase";
 import Gear from "../icons/Gear";
 import { UserContext } from "./UserContext";
 import { Link } from "@tanstack/react-router";
@@ -65,7 +66,7 @@ function UserBadge() {
               ) : (
                 <Link
                   to="/"
-                  onClick={() => firebase.auth().signOut()}
+                  onClick={() => signOut(auth)}
                   className="fg-color w-full"
                 >
                   <div className="p-2">Sign out</div>

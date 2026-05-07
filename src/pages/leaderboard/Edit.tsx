@@ -1,9 +1,8 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import * as Collapsible from "@radix-ui/react-collapsible";
-import { useState } from "react";
 import { Sidebar } from "../../components/Sidebar.js";
 import { useUserProfile } from "../../hooks/UseProfile.js";
-import firebase from "firebase/compat/app";
+import { UserContext } from "src/components/UserContext";
 import {
   useLeaderboardUpsert,
   useMyLeaderboards,
@@ -11,8 +10,7 @@ import {
 
 import { Input, Checkbox, NumberInput } from "../../components/Input.js";
 import { FRONTEND_URL } from "~/hooks/base.js";
-import { Link, redirect } from "@tanstack/react-router";
-import { signInPage } from "~/routes/index.js";
+import { Link, Navigate } from "@tanstack/react-router";
 const Separator = () => {
   return <div className="w-full h-px bg-gray-300 my-4" />;
 };
@@ -290,12 +288,15 @@ const LeaderboardRow = ({
 };
 
 export default function Edit() {
+  const { user, isPending } = useContext(UserContext);
   const { data: leaderboards = [] } = useMyLeaderboards();
-  const user = firebase.auth().currentUser;
-  if (!user) redirect(signInPage);
   const { data: profile, isLoading, isError } = useUserProfile();
+
+  if (isPending) return <div>Loading...</div>;
+  if (!user) return <Navigate to="/sign-in" />;
   if (isLoading || !profile) return <div>Loading...</div>;
   if (isError) return <div>Error loading profile</div>;
+
   const otherLeaderboardNames = leaderboards.map((board) => board.name);
   return (
     <Sidebar title="My leaderboards">

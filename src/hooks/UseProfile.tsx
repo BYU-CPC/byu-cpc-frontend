@@ -1,57 +1,50 @@
 import { useState, useEffect, useContext } from "react";
-import firebase from "firebase/compat/app";
 import { BACKEND_URL } from "./base";
-import { onAuthStateChanged, UserInfo } from "firebase/auth";
-import "firebase/compat/auth";
+import { onIdTokenChanged, User } from "firebase/auth";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { UserContext } from "src/components/UserContext";
-type User = UserInfo & { getIdToken: () => Promise<string> };
-
-const useUserToken = () => {
-  return useQuery({
-    queryKey: ["userToken"],
-    queryFn: async () => {
-      const user = firebase.auth().currentUser;
-      if (user) {
-        const token = user.getIdToken();
-        if (token) {
-          return token;
-        }
-        throw new Error("User token not available");
-      }
-      throw new Error("User not authenticated");
-    },
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    refetchOnReconnect: false,
-    refetchInterval: 1000 * 60 * 3,
-    gcTime: 1000 * 60 * 30,
-  });
-};
+import { auth } from "src/auth/firebase";
 
 export function useUser() {
-  const [user, setUser] = useState<User | null>(firebase.auth().currentUser);
-  const { data: token, isPending } = useUserToken();
+  const [user, setUser] = useState<User | null>(auth.currentUser);
+  const [token, setToken] = useState<string | null>(null);
+  const [isPending, setIsPending] = useState(true);
   const queryClient = useQueryClient();
-  useEffect(() => {
-    if (user && !token) {
-      queryClient.invalidateQueries({ queryKey: ["userToken"] });
-    }
-  }, [user, token, queryClient]);
 
-  // reset the token every 5 minutes by setting an interval
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(firebase.auth(), (user) => {
-      setUser(user);
-      queryClient.invalidateQueries({ queryKey: ["userToken"] });
+    let active = true;
+    const readyPromise = auth.authStateReady?.() ?? Promise.resolve();
+
+    const unsubscribe = onIdTokenChanged(auth, async (firebaseUser) => {
+      const nextToken = firebaseUser ? await firebaseUser.getIdToken() : null;
+      await readyPromise;
+      if (!active) return;
+
+      setUser(firebaseUser);
+      setToken(nextToken);
+      setIsPending(false);
+
+      if (!firebaseUser) {
+        queryClient.removeQueries({ queryKey: ["profile"] });
+        queryClient.removeQueries({ queryKey: ["joinedLeaderboards"] });
+        queryClient.removeQueries({ queryKey: ["myLeaderboards"] });
+      }
     });
 
-    // Clean up the subscription when the component unmounts
-    return () => unsubscribe();
-  }, []);
+    readyPromise.finally(() => {
+      if (active) {
+        setIsPending(false);
+      }
+    });
 
-  return { user, token: token ?? null, isPending };
+    return () => {
+      active = false;
+      unsubscribe();
+    };
+  }, [queryClient]);
+
+  return { user, token, isPending };
 }
 
 type Profile = {
@@ -77,6 +70,6 @@ export function useUserProfile() {
     queryKey: ["profile", user?.uid],
     queryFn: getProfile,
     refetchOnWindowFocus: true,
-    enabled: !!user,
+    enabled: !!user && !!token,
   });
 }
